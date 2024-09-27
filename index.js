@@ -281,17 +281,16 @@ function renderTask(viewSelected) {
       taskDate.getDate() === contentDate.getDate();
   }
 
-  if (viewSelected === 'day-view') {
-    document.querySelectorAll('.day-view .done-content').forEach((done) => {
-      done.innerHTML = ''; // Clear the content
-    });
-    document.getElementById('toDoContent').innerHTML = '';
+  document.querySelectorAll(`.${viewSelected} .done-content`).forEach((done) => {
+    done.innerHTML = ''; // Clear the content, cuz i'll use "+=" for the following
+  });
+  document.getElementById('toDoContent').innerHTML = '';
 
+  if (viewSelected === 'day-view') {
+    // get the doneContentDate for today
+    const doneContentDate = new Date(doneContentElem.dataset.date)
     tasks.forEach((task) => {
       const taskDate = new Date(task.date);
-
-      // get the doneContentDate for today
-      const doneContentDate = new Date(doneContentElem.dataset.date)
 
       if (isSameDate(taskDate, doneContentDate)) {
         // 是的話再做下面這些事情
@@ -310,12 +309,6 @@ function renderTask(viewSelected) {
       const { date } = done.dataset
       weekDates.push(new Date(date))
     }); // get an array from .done-content's data-attribute
-
-    // Clear all .done-content before rendering new tasks
-    document.querySelectorAll('.week-view .done-content').forEach((done) => {
-      done.innerHTML = ''; // Clear the content
-    });
-    document.getElementById('toDoContent').innerHTML = '';
 
     tasks.forEach((task) => {
       const taskDate = new Date(task.date);
