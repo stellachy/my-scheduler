@@ -34,23 +34,41 @@ handleViewChange();
 function generateWeek() {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   let weekViewHTML = '';
+  const today = new Date();
+  const currenttMonday = getMonday(today);
+  const weekDates = getWeekDates(currenttMonday).map((date) => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+  })  // get日期的objects的array之後，map出一個array裡面放我想要的值就好（e.g. 2024-9-23）
 
-  days.forEach((day) => {
+  days.forEach((day, index) => {
     weekViewHTML += `
       <div class="done-grid-item">
         <div class="done-header">
           <span>${day}</span>
         </div>
-        <div class="done-content">
+        <div class="done-content" data-date="${weekDates[index]}">
         </div>
       </div>    
     `;
   })
-  
+
   document.querySelector('.week-view .done-grid')
     .innerHTML = weekViewHTML;
 }
 generateWeek();
+
+function getWeekDates(currenttMonday) {
+  const weekDates = [];
+
+  // loop through the week & create the date data for Mon to Sun
+  for (i = 0; i < 7; i++) {
+    const day = new Date(currenttMonday);
+    day.setDate(currenttMonday.getDate() + i);
+    weekDates.push(day);
+  }
+
+  return weekDates;
+}
 
 // this generate the month-grid!
 function generateMonth(daysInMonth) {
@@ -253,81 +271,66 @@ addBtn.onclick = () => {
 }
 
 // add date to the done-content in the day-view
-// const doneContentElem = document.querySelector('.day-view .done-content')
-// doneContentElem.setAttribute('data-date', `${new Date()}`)
-
-// const doneContentDate = new Date(doneContentElem.dataset.date)
-
+const doneContentElem = document.querySelector('.day-view .done-content')
+doneContentElem.setAttribute('data-date', `${new Date()}`)
 
 function renderTask(viewSelected) {
-  let taskHTML = '';
-  let taskDoneHTML = '';
+  function isSameDate(taskDate, contentDate) {
+    return taskDate.getFullYear() === contentDate.getFullYear() &&
+      taskDate.getMonth() === contentDate.getMonth() &&
+      taskDate.getDate() === contentDate.getDate();
+  }
 
   if (viewSelected === 'day-view') {
+    document.querySelectorAll('.day-view .done-content').forEach((done) => {
+      done.innerHTML = ''; // Clear the content
+    });
+    document.getElementById('toDoContent').innerHTML = '';
+
     tasks.forEach((task) => {
       const taskDate = new Date(task.date);
-      const today = new Date(); // ！！！需要在這裡拿到today才會可以直接用下方的比較⋯
 
-      function isSameDate(taskDate, today) {
-        return taskDate.getFullYear() === today.getFullYear() &&
-          taskDate.getMonth() === today.getMonth() &&
-          taskDate.getDate() === today.getDate();
-      }
-      // Day view的話，先判斷是否===今天！
-      if (isSameDate(taskDate, today)) {
+      // get the doneContentDate for today
+      const doneContentDate = new Date(doneContentElem.dataset.date)
+
+      if (isSameDate(taskDate, doneContentDate)) {
         // 是的話再做下面這些事情
         if (task.status) {
-          taskDoneHTML += `
-          <span class="task ${task.color} ${task.status}">${task.title}</span>
-        `;
+          document.querySelectorAll('.day-view .done-content')[0]
+            .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
         } else {
-          taskHTML += `
-          <span class="task ${task.color}">${task.title}</span>
-        `;
+          document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
         }
       }
     });
-    document.querySelector(`.${viewSelected} .done-content`).innerHTML = taskDoneHTML;
-    document.getElementById('toDoContent').innerHTML = taskHTML;
   }
   else if (viewSelected === 'week-view') {
-    function isSameWeek(taskDate, today) {
-      const currenttMonday = getMonday(today);
-      const currentSunday = getSunday(today);
+    const weekDates = [];
+    document.querySelectorAll('.week-view .done-content').forEach((done) => {
+      const { date } = done.dataset
+      weekDates.push(new Date(date))
+    }); // get an array from .done-content's data-attribute
 
-      return taskDate >= currenttMonday && taskDate <= currentSunday
-    }
-
-    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    let taskDoneHTMLObj = daysOfWeek.reduce((acc, day) => {
-      return { ...acc, [day]: '' }
-    }, {});
+    // Clear all .done-content before rendering new tasks
+    document.querySelectorAll('.week-view .done-content').forEach((done) => {
+      done.innerHTML = ''; // Clear the content
+    });
+    document.getElementById('toDoContent').innerHTML = '';
 
     tasks.forEach((task) => {
       const taskDate = new Date(task.date);
-      const today = new Date();
-      // Week view的話，先判斷是否===在這一週內！
-      if (isSameWeek(taskDate, today)) {
-        if (task.status) {
-          // 判斷是否為週一至週五  // task的日期數字是1-7
-          const dayIndex = taskDate.getDay() - 1 // 一到日變成0-6
 
-          // 分別放到不同的key之中
-          taskDoneHTMLObj[daysOfWeek[dayIndex]] += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
-        } else {
-          taskHTML += `
-          <span class="task ${task.color}">${task.title}</span>
-        `;
+      weekDates.forEach((weekDate, index) => {
+        if (isSameDate(taskDate, weekDate)) {
+          if (task.status) {
+            document.querySelectorAll('.week-view .done-content')[index]
+              .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+          } else {
+            document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+          }
         }
-      }
-    })
-
-    document.querySelectorAll('.week-view .done-content').forEach((doneContentElem, index) => {
-      // index 0-6 是一到日
-      doneContentElem.innerHTML = taskDoneHTMLObj[daysOfWeek[index]];
-    })
-
-    document.getElementById('toDoContent').innerHTML = taskHTML;
+      })
+    });
   }
 }
 
@@ -338,7 +341,6 @@ const today = new Date();
 renderTask(viewSelected);
 
 getFormattedDate(today);
-
 
 function getFormattedDate(today) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -372,6 +374,7 @@ function getFormattedDate(today) {
 console.log(tasks);
 
 function getMonday(today) {
+  today = new Date(today)
   const day = today.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
   // if (day !== 1) { // check if it's monday
 
@@ -382,6 +385,7 @@ function getMonday(today) {
 }
 
 function getSunday(today) {
+  today = new Date(today)
   const day = today.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
 
   today.setHours(24 * (7 - day));
