@@ -71,12 +71,31 @@ function getWeekDates(currenttMonday) {
 }
 
 // this generate the month-grid!
-function generateMonth(daysInMonth) {
+function generateMonth(daysInMonth, firstDayOfMonth) {
   const month = document.getElementById('month');
+  month.innerHTML = `
+    <tr>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+          <th>Saturday</th>
+          <th>Sunday</th>
+    </tr>
+  `;
   let newRow = month.insertRow();
+
+  let weekDayOfMonth = firstDayOfMonth ? firstDayOfMonth : 7;
+
+  for (let day = 1; day < weekDayOfMonth; day++) {
+    newRow.insertCell();
+  }
+
   for (let day = 1; day <= daysInMonth; day++) {
-    if (day % 7 === 1 && day !== 1) {
+    if (weekDayOfMonth === 8) {
       newRow = month.insertRow();
+      weekDayOfMonth = 1;
     }
     const newCell = newRow.insertCell();
     newCell.innerHTML = `
@@ -92,9 +111,23 @@ function generateMonth(daysInMonth) {
     newCell.onclick = function () {
       console.log(newCell);
     };
+
+    weekDayOfMonth ++;
   }
 }
-generateMonth(30);
+generateMonth(getDaysInCurrentMonth(), getFirstDayOfMonth());
+
+function getFirstDayOfMonth() {
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
+  return firstDayOfMonth;
+}
+
+function getDaysInCurrentMonth() {
+  const today = new Date();
+  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  return daysInMonth;
+}
 
 // this generate year-view grid!
 function generateYear() {
