@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Scheduler</title>
+
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+  <header>
+    <div class="header-container">
+      <span class="material-symbols-outlined header-menu-icon">menu</span>
+      <span class="header-title">My Secheduler</span>
+      <!-- goes back to the original one! -->
+      <span class="header-view-changer">
+        <select name="change-view" id="view-selector">
+          <option value="day-view" selected>Day</option>
+          <option value="week-view">Week</option>
+          <option value="month-view">Month</option>
+          <option value="year-view">Year</option>
+        </select>
+      </span>
+      <span class="header-view-detail">
+        <span class="header-view-day"></span> |
+        <span class="header-view-date"></span>
+      </span>
+
+      <button class="header-today">today</button>
+      <button class="header-prev">
+        <span class="material-symbols-outlined">chevron_backward</span>
+      </button>
+      <button class="header-next">
+        <span class="material-symbols-outlined">chevron_forward</span>
+      </button>
+    </div>
+  </header>
+  <main>
+    <section class="to-do-section">
+      <div class="overlay" id="overlay">
+      </div>
+
+      <div class="to-do-header" id="displayText">
+        <div class="to-do-header-text">To dos</div>
+        <!-- <span class="to-do-header-icon">+</span> -->
+        <span class="material-symbols-outlined to-do-header-icon"
+              id="displayIcon"
+        >add_circle</span>
+      </div>
+
+      <div class="task-card">
+        <!-- <div class="color-mark">⦿</div> -->
+        <div class="color-tag-container">
+          <button class="tag tag-red" data-color="red"></button>
+          <button class="tag tag-yellow" data-color="yellow"></button>
+          <button class="tag tag-orange" data-color="orange"></button>
+          <button class="tag tag-blue" data-color="blue"></button>
+          <button class="tag tag-green" data-color="green"></button>
+          <button class="tag tag-purple" data-color="purple"></button>
+        </div>
+
+        <div class="task-card-grid">
+          <label for="task-card-title" class="title">Title</label>
+          <textarea type="text" id="task-card-title"></textarea>
+
+          <label for="task-card-date">Date</label>
+          <input id="task-card-date" type="date">
+
+          <label for="task-card-time">Time</label>
+          <input id="task-card-time" type="number" placeholder="hrs">
+
+          <label for="task-card-more" class="more">More</label>
+          <textarea id="task-card-more" type="textarea"></textarea>
+        </div>
+
+        <div class="status-mark">
+          <span class="status-done" id="doneBtn">Done</span>
+          <span class="status-add" id="addBtn">Add</span>
+          <span class="status-cancel" id="cancelBtn">Cancel</span>
+        </div>
+      </div>
+      <div class="to-do-content" id="toDoContent">
+        <!-- <span class="task red">watch Netflix</span>
+        <span class="task red">watch Netflix</span>
+        <span class="task orange">do something else</span><span class="task yellow">watch yt</span>
+        <span class="task red">watch Netflix</span>
+        <span class="task red">watch Netflix</span>
+        <span class="task red">watch Netflix</span>
+        <span class="task yellow">watch yt</span>
+        <span class="task yellow">watch yt</span> -->
+
+        <!-- the above is for checking the overflow situation! -->
+      </div>
+    </section>
+
+    <section class="done-section day-view active">
+      <div class="done-grid">
+        <div class="done-grid-item done-morning">
+          <div class="done-header-morning">
+            <span class="material-symbols-outlined">wb_sunny</span>
+          </div>
+          <div class="done-content">
+            <!-- <span class="task done red">personal</span>
+            <span class="task done orange">relationship</span> -->
+          </div>
+        </div>
+
+        <div class="done-grid-item done-afternoon">
+          <div class="done-header-afternoon">
+            <span class="material-symbols-outlined">lunch_dining</span>
+          </div>
+          <div class="done-content">
+            <!-- <span class="task done green">another tasks</span>
+            <span class="task done purple">another tasks</span>
+            <span class="task done purple">another tasks</span>
+            <span class="task done blue">another tasks</span>
+            <span class="task done red">another tasks</span>
+            <span class="task done red">another tasks</span> -->
+          </div>
+        </div>
+
+        <div class="done-grid-item done-evening">
+          <div class="done-header-evening">
+            <span class="material-symbols-outlined">nights_stay</span>
+          </div>
+          <div class="done-content">
+            <!-- <span class="task done red">task sample again</span>
+            <span class="task done orange">task sample again</span>
+            <span class="task done yellow">task sample again</span>
+            <span class="task done green">task sample again</span> -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="done-section week-view">
+      <div class="done-grid">
+        <div class="done-grid-item">
+          <div class="done-header">
+            <span>Monday</span>
+          </div>
+          <div class="done-content">
+            <span class="task done red">personal</span>
+            <span class="task done orange">relationship</span>
+          </div>
+        </div>
+
+        <div class="done-grid-item">
+          <div class="done-header">
+            <span>Tuesday</span>
+          </div>
+          <div class="done-content">
+            <span class="task done orange">relationship</span>
+            <span class="task done purple">another tasks</span>
+            <span class="task done blue">another tasks</span>
+            <span class="task done red">another tasks</span>
+            <span class="task done red">another tasks</span>
+          </div>
+        </div>
+
+        <div class="done-grid-item">
+          <div class="done-header">
+            <span>Wednesday</span>
+          </div>
+          <div class="done-content">
+            <span class="task done red">personal</span>
+            <span class="task done orange">relationship</span>
+          </div>
+        </div>
+
+        <div class="done-grid-item">
+          <div class="done-header">
+            <span>Thursday</span>
+          </div>
+          <div class="done-content">
+            <span class="task done red">personal</span>
+            <span class="task done orange">relationship</span>
+          </div>
+        </div>
+
+        <div class="done-grid-item">
+          <div class="done-header">
+            <span>Friday</span>
+          </div>
+          <div class="done-content">
+            <span class="task done red">personal</span>
+            <span class="task done orange">relationship</span>
+          </div>
+        </div>
+
+        <div class="done-grid-item">
+          <div class="done-header">
+            <span>Saturday</span>
+          </div>
+          <div class="done-content">
+            <span class="task done red">personal</span>
+            <span class="task done orange">relationship</span>
+          </div>
+        </div>
+
+        <div class="done-grid-item">
+          <div class="done-header">
+            <span>Sunday</span>
+          </div>
+          <div class="done-content">
+            <span class="task done red">personal</span>
+            <span class="task done orange">relationship</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="done-section month-view">
+      <table id="month">
+        <tr>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+          <th>Saturday</th>
+          <th>Sunday</th>
+        </tr>
+      </table>
+    </section>
+
+    <section class="done-section year-view">
+      <div id="year-view-grid" class="done-grid">
+      </div>
+    </section>
+
+    <script src="./index.js"></script>
+  </main>
+</body>
+
+</html>

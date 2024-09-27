@@ -1,0 +1,513 @@
+@import url('https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;600&display=swap');
+
+:root {
+  --tag-red: #F3C3C3;
+  --tag-yellow: #FFF2AD;
+  --tag-orange: #FFD2B1;
+  --tag-blue: #B1D5FF;
+  --tag-green: #D7E7B5;
+  --tag-purple: #C0C6FF;
+
+  --white: #FFFFFF;
+  --section-color: #F5F5F5;
+  --button-color: #D9D9D9;
+  --text-color: #5F5858;
+  --text-light: #A19E9E ;
+  --text-dark: #504A4A;
+  /* 
+  #FFFFFF  white
+  #5F5858  text color
+  #D9D9D9  button color
+  #F5F5F5  section color
+  #A19E9E  text-light color
+  #504A4A  text-darker color
+  */
+}
+
+body {
+  font-family: "Inknut Antiqua", serif;
+  color: var(--text-color);
+}
+
+/* 調整header的fixed on the top */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 900;
+  background-color: var(--white);
+}
+main {
+  padding-top: 48px;
+}
+
+.header-container {
+  /* the following two lines help icon align w/ the text! */
+  display: flex;
+  align-items: center;
+
+  padding: 6px 0px;
+  border-bottom: 1px solid var(--text-color);
+  box-sizing: border-box;
+}
+
+.header-menu-icon {
+  font-size: 26px;
+  padding-left: 6px;
+  padding-right: 10px;
+}
+
+.header-title {
+  margin-right: 6px;
+}
+
+.header-view-detail,
+.header-view-changer {
+  margin: 0px 6px
+}
+
+.header-view-day, 
+.header-view-date {
+  margin-right: 6px;
+}
+
+select {
+  font-family: "Inknut Antiqua", serif;
+  border: none;
+  border-radius: 20px;
+  background-color: var(--button-color);
+  padding: 2px 10px;
+  text-align: center;
+  color: var(--text-color);
+  appearance: none;
+}
+
+select:hover {
+  background-color: var(--section-color);
+  cursor: pointer;
+}
+
+button {
+  font-family: "Inknut Antiqua", serif;
+  border: none;
+  margin-right: 6px;
+  color: var(--text-color);
+}
+
+.header-today {
+  margin-left: 6px;
+  border-radius: 4px;
+  background-color: var(--button-color);
+  padding: 0px 10px;
+  box-sizing: border-box;
+}
+
+.header-today:hover {
+  background-color: var(--section-color);
+  cursor: pointer;
+}
+
+.header-prev, 
+.header-next {
+  width: 25px;
+  height: 25px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+
+  background-color: transparent;
+}
+
+.header-prev:hover, 
+.header-next:hover {
+  background-color: var(--button-color);
+  cursor: pointer;
+}
+
+.to-do-section {
+  margin: 2vh 18%;
+  border-radius: 8px;
+  background-color: var(--section-color);
+  height: 160px;
+  padding: 6px 20px;
+
+  min-width: 388px;
+  box-sizing: border-box;
+
+  position: relative;
+}
+
+.to-do-header {
+  display: flex;
+  align-items: center;
+}
+
+.to-do-header-text {
+  margin-right: 5px;
+}
+
+.to-do-header-text:hover {
+  cursor: pointer;
+}
+.to-do-header-icon:hover {
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+/* 結果更換overlay在html裡的位置就好了！ */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  margin-top: 53px;
+
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+
+  z-index: 100;
+  display: none;
+}
+
+.overlay.active {
+  display: block;
+}
+
+.task-card {
+  display: none;
+  z-index: 101;
+
+  position: absolute;
+  top: 10px;
+  left: 84px;
+
+  background-color: var(--white);
+  width: 350px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.task-card.clicked{
+  display: block;
+}
+
+.color-tag-container {
+  display: flex;
+  gap: 5px;
+  margin: 8px 0px;
+}
+
+.tag {
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  padding-right: 10px;
+}
+
+.tag:hover {
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.tag-red {
+  background-color: var(--tag-red);
+}
+
+.tag-yellow {
+  background-color: var(--tag-yellow);
+}
+
+.tag-orange {
+  background-color: var(--tag-orange);
+}
+
+.tag-blue {
+  background-color: var(--tag-blue);
+}
+
+.tag-green {
+  background-color: var(--tag-green);
+}
+
+.tag-purple {
+  background-color: var(--tag-purple);
+}
+
+.task-card-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+  align-items: middle;
+}
+
+.task-card textarea,
+.task-card input {
+  border: none;
+  background-color: var(--section-color);
+  border-radius: 8px;
+
+  width: 280px;
+  margin-bottom: 10px;
+
+  color: var(--text-dark);
+  font-family: "Inknut Antiqua", serif;;
+  font-size: 16px;
+}
+
+.task-card input {
+  height: 40px;
+  text-align: center;
+}
+
+.task-card textarea {
+  /* this disables the resizing function! */
+  resize: none;
+
+  /* this makes overflow happen only vertically */
+  overflow-y: auto;
+
+  /* this adjusts line spacing! */
+  line-height: 1.6;
+
+  padding: 6px 18px;
+  box-sizing: border-box;
+}
+
+  /* fix the line-wrapping issue by using <textarea>, plz see above!*/
+.task-card .title+textarea{
+  height: 70px;
+}
+
+.task-card .more+textarea{
+  height: 150px;
+}
+
+.status-mark {
+  width: 100%;
+  /* the following two lines distribute space b/t the three spans  */
+  display: flex;
+  justify-content: space-between;
+
+  color: var(--text-light);
+  margin-top: -10px;
+  margin-bottom: -2px;
+} 
+
+.status-done:hover, 
+.status-add:hover, 
+.status-cancel:hover {
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.to-do-content {
+  height: 70%;
+  overflow: auto;
+}
+
+.done-section {
+  display: none;
+}
+
+.done-section.active {
+  display: block;
+}
+
+.done-section {
+  margin-left: 18%;
+  margin-right: 18%;
+  margin-bottom: 2vh;
+}
+
+.done-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1vw;
+  
+  overflow: auto;
+  height: 100%;
+}
+
+.done-grid-item {
+  padding: 10px;
+  text-align: center;
+  background-color: var(--section-color);
+  border-radius: 10px;
+  height: 100%;
+
+  min-width: 125px;
+  min-height: 350px;
+  max-height: 350px;
+  overflow: auto;
+
+  box-sizing: border-box;
+}
+
+.task {
+  border-radius: 20px;
+  font-size: 14px;
+  padding: 0px 15px;
+  display: inline-block;
+  
+  /* if change this, the words would be too above */
+  /* line-height: 1.6; */
+  margin: auto;
+  color: var(--text-light);
+  border-bottom: 1px solid var(--text-light);
+}
+
+.task.red {
+  background-color: var(--tag-red);
+}
+
+.task.yellow {
+  background-color: var(--tag-yellow);
+}
+
+.task.orange {
+  background-color: var(--tag-orange);
+}
+
+.task.blue {
+  background-color: var(--tag-blue);
+}
+
+.task.green {
+  background-color: var(--tag-green);
+}
+
+.task.purple {
+  background-color: var(--tag-purple);
+}
+
+.task.done{
+  display: block;
+  color: inherit;
+
+  height: 35px;
+  overflow: auto;
+}
+
+@media screen and (max-width:605px){
+  header {
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    padding-top: 6px;
+    margin: 0;
+    left: 0;
+    right: 0;
+
+    z-index: 900;
+    background-color: var(--white);
+  }
+  
+  .header-title, 
+  .header-view-day {
+    display: none;
+  } 
+
+  .to-do-section {
+    position: fixed;
+    top: 50px;
+    width: 100%;
+
+    margin: 0;
+    left: 0;
+    right: 0;
+
+    background-color: var(--button-color);
+  }
+
+  body {
+    padding-top: 150px;
+  }
+
+  .done-section {
+    margin-top: 9vh;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 1vh;
+  }
+
+  .done-grid {
+    grid-template-columns: 1fr;
+    row-gap: 1vh;
+  }
+}
+
+/* the following is for week-view */
+.week-view>.done-grid {
+  grid-template-columns: repeat(7, 1fr);
+  column-gap: 1vw;
+  height: 100%;
+  overflow: auto;
+}
+
+.week-view .done-header {
+  padding-bottom: 6px;
+}
+
+.week-view .done-grid-item {
+  min-width: 230px;
+}
+
+/* the following is for month-view! */
+/* 調整done-section大小（after padding~） */
+.done-section.month-view {
+  margin-left: 17.5%;
+  margin-right: 17.5%;
+}
+
+#month {
+  width: 100%;
+  /* the following distribute the same size of each column! */
+  table-layout: fixed;
+  
+  border-spacing: 5px;
+}
+
+/* 表格td高度是固定根據content而定，因此在cell裡用div.month-view-day就可以成功固定高度了～ */
+.month-view-day {
+  background-color: var(--section-color);
+  border-radius: 10px;
+  height: 100px;
+  /* min-height: 100px; */
+  padding-left: 15px;
+  vertical-align: top;
+
+  overflow: auto;
+}
+
+/* this following is for to-do-section of both month-&year- view */
+.to-do-section.smaller-size {
+  height: 120px;
+
+  /* 讓to-do-section可以在往下滑的時候還是固定在上面！ */
+  position: sticky;
+  top: 50px;
+}
+
+/* 讓to-do-content不超過to-do-section的高度～ */
+.smaller-size .to-do-content {
+  height: 60%;
+  overflow: auto;
+}
+
+/* the following is for year-view */
+.year-view li {
+  /* let tasks align on the left side */
+  text-align: left;
+}
+.year-view ol {
+  margin-top: 0px;
+  padding-left: 20px;
+}
+.year-view .task {
+  display: block;
+  height: 35px;
+  overflow: auto;
+}
