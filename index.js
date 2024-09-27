@@ -276,15 +276,10 @@ function renderTask(viewSelected) {
       return taskDate >= currenttMonday && taskDate <= currentSunday
     }
     
-    let taskDoneHTMLObj = {
-      Mon: '',
-      Tue: '',
-      Wed: '',
-      Thu: '',
-      Fri: '',
-      Sat: '',
-      Sun: ''
-    }
+    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    let taskDoneHTMLObj = daysOfWeek.reduce((acc, day) => {
+      return {...acc, [day]: ''}
+    }, {});
 
     tasks.forEach((task) => {
       const taskDate = new Date(task.date);
@@ -292,28 +287,11 @@ function renderTask(viewSelected) {
       // Week view的話，先判斷是否===在這一週內！
       if (isSameWeek(taskDate, today)) {
         if (task.status) {
-          // here要判斷是否為同一天
-          const day = taskDate.getDay()
+          // 判斷是否為週一至週五  // task的日期數字是1-7
+          const dayIndex = taskDate.getDay() - 1 // 一到日變成0-6
 
-          if (day === 1) {
-            taskDoneHTMLObj.Mon += `<span class="task ${task.color} ${task.status}">${task.title}</span>`
-          } else if (day === 2) {
-            taskDoneHTMLObj.Tue += `<span class="task ${task.color} ${task.status}">${task.title}</span>`
-          } else if (day === 3) {
-            taskDoneHTMLObj.Wed += `<span class="task ${task.color} ${task.status}">${task.title}</span>`
-          } else if (day === 4) {
-            taskDoneHTMLObj.Thu += `<span class="task ${task.color} ${task.status}">${task.title}</span>`
-          } else if (day === 5) {
-            taskDoneHTMLObj.Fri += `<span class="task ${task.color} ${task.status}">${task.title}</span>`
-          } else if (day === 6) {
-            taskDoneHTMLObj.Sat += `<span class="task ${task.color} ${task.status}">${task.title}</span>`
-          } else if (day === 7) {
-            taskDoneHTMLObj.Sun += `<span class="task ${task.color} ${task.status}">${task.title}</span>`
-          } 
-
-        //   taskDoneHTML += `
-        //   <span class="task ${task.color} ${task.status} ${day}">${task.title}</span>
-        // `;
+          // 分別放到不同的key之中
+          taskDoneHTMLObj[daysOfWeek[dayIndex]] += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
         } else {
           taskHTML += `
           <span class="task ${task.color}">${task.title}</span>
@@ -323,23 +301,8 @@ function renderTask(viewSelected) {
     })
 
     document.querySelectorAll('.week-view .done-content').forEach((doneContentElem, index) => {
-      // task的日期數字是1-7
-      // inde 0-6 是一到日
-      if (index == 0) {
-        doneContentElem.innerHTML = taskDoneHTMLObj.Mon
-      } else if (index == 1) {
-        doneContentElem.innerHTML = taskDoneHTMLObj.Tue
-      } else if (index == 2) {
-        doneContentElem.innerHTML = taskDoneHTMLObj.Wed
-      } else if (index == 3) {
-        doneContentElem.innerHTML = taskDoneHTMLObj.Thu
-      } else if (index == 4) {
-        doneContentElem.innerHTML = taskDoneHTMLObj.Fri
-      } else if (index == 5) {
-        doneContentElem.innerHTML = taskDoneHTMLObj.Sat
-      } else if (index == 6) {
-        doneContentElem.innerHTML = taskDoneHTMLObj.Sun
-      }
+      // index 0-6 是一到日
+      doneContentElem.innerHTML = taskDoneHTMLObj[daysOfWeek[index]];
     })
 
     document.getElementById('toDoContent').innerHTML = taskHTML;
