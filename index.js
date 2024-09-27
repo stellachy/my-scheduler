@@ -30,6 +30,28 @@ handleViewChange();
 
 // console.log(viewSelected);
 
+// this generate the week-view
+function generateWeek() {
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  let weekViewHTML = '';
+
+  days.forEach((day) => {
+    weekViewHTML += `
+      <div class="done-grid-item">
+        <div class="done-header">
+          <span>${day}</span>
+        </div>
+        <div class="done-content">
+        </div>
+      </div>    
+    `;
+  })
+  
+  document.querySelector('.week-view .done-grid')
+    .innerHTML = weekViewHTML;
+}
+generateWeek();
+
 // this generate the month-grid!
 function generateMonth(daysInMonth) {
   const month = document.getElementById('month');
@@ -231,10 +253,10 @@ addBtn.onclick = () => {
 }
 
 // add date to the done-content in the day-view
-  // const doneContentElem = document.querySelector('.day-view .done-content')
-  // doneContentElem.setAttribute('data-date', `${new Date()}`)
+// const doneContentElem = document.querySelector('.day-view .done-content')
+// doneContentElem.setAttribute('data-date', `${new Date()}`)
 
-  // const doneContentDate = new Date(doneContentElem.dataset.date)
+// const doneContentDate = new Date(doneContentElem.dataset.date)
 
 
 function renderTask(viewSelected) {
@@ -267,7 +289,7 @@ function renderTask(viewSelected) {
     });
     document.querySelector(`.${viewSelected} .done-content`).innerHTML = taskDoneHTML;
     document.getElementById('toDoContent').innerHTML = taskHTML;
-  } 
+  }
   else if (viewSelected === 'week-view') {
     function isSameWeek(taskDate, today) {
       const currenttMonday = getMonday(today);
@@ -275,10 +297,10 @@ function renderTask(viewSelected) {
 
       return taskDate >= currenttMonday && taskDate <= currentSunday
     }
-    
+
     const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     let taskDoneHTMLObj = daysOfWeek.reduce((acc, day) => {
-      return {...acc, [day]: ''}
+      return { ...acc, [day]: '' }
     }, {});
 
     tasks.forEach((task) => {
