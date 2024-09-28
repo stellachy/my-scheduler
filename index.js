@@ -73,6 +73,11 @@ function getWeekDates(currenttMonday) {
 // this generate the month-grid!
 function generateMonth(daysInMonth, firstDayOfMonth) {
   const month = document.getElementById('month');
+
+  const monthDates = getMonthDates(daysInMonth).map((date) => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+  })
+
   month.innerHTML = `
     <tr>
           <th>Monday</th>
@@ -101,21 +106,34 @@ function generateMonth(daysInMonth, firstDayOfMonth) {
     newCell.innerHTML = `
             <div class="month-view-day">
               <div class="month-view-day-header">${day}</div>
-              <div class="done-content">
-                <div class="task yellow">hotpot</div>
-                <div class="task">huhh</div>
+              <div class="done-content" data-date="${monthDates[day - 1]}">
               </div>
             </div>
           `;
-    // newCell.className = 'month-view-day';
-    newCell.onclick = function () {
-      console.log(newCell);
-    };
 
-    weekDayOfMonth ++;
+    // newCell.onclick = function () {
+    //   console.log(newCell);
+    // };
+
+    weekDayOfMonth++;
   }
 }
 generateMonth(getDaysInCurrentMonth(), getFirstDayOfMonth());
+
+function getMonthDates(daysInMonth) {
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+  const monthDates = [];
+
+  // loop through the week & create the date data for Mon to Sun
+  for (i = 0; i < daysInMonth; i++) {
+    const day = new Date(firstDayOfMonth);
+    day.setDate(firstDayOfMonth.getDate() + i);
+    monthDates.push(day);
+  }
+
+  return monthDates;
+}
 
 function getFirstDayOfMonth() {
   const today = new Date();
@@ -357,7 +375,28 @@ function renderTask(viewSelected) {
         }
       })
     });
-  }
+  } else if (viewSelected === 'month-view') {
+    const monthDates = [];
+    document.querySelectorAll('.month-view .done-content').forEach((done) => {
+      const { date } = done.dataset
+      monthDates.push(new Date(date))
+    }); // get an array from .done-content's data-attribute
+
+    tasks.forEach((task) => {
+    const taskDate = new Date(task.date);
+
+    monthDates.forEach((monthDate, index) => {
+      if (isSameDate(taskDate, monthDate)) {
+        if (task.status) {
+          document.querySelectorAll('.month-view .done-content')[index]
+            .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+        } else {
+          document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+        }
+      }
+    })
+  });
+}
 }
 
 // get today's date when the page first loads.
