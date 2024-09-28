@@ -17,7 +17,7 @@ function handleViewChange() {
     getFormattedDate(today);
 
     // this helps change the size of "to-do-section" depending on the view (here is for the month-&year- view!)
-    if (viewSelected === 'month' || viewSelected === 'year') {
+    if (viewSelected === 'month-view' || viewSelected === 'year-view') {
       document.querySelector('.to-do-section').
         classList.add('smaller-size');
     } else {
@@ -149,43 +149,17 @@ function getDaysInCurrentMonth() {
 
 // this generate year-view grid!
 function generateYear() {
-  const months = [{
-    name: 'January',
-    days: 31
-  }, {
-    name: 'Febuary',
-    days: 28
-  }, {
-    name: 'March',
-    days: 31
-  }, {
-    name: 'April',
-    days: 30
-  }, {
-    name: 'May',
-    days: 31
-  }, {
-    name: 'June',
-    days: 30
-  }, {
-    name: 'July',
-    days: 31
-  }, {
-    name: 'August',
-    days: 31
-  }, {
-    name: 'September',
-    days: 30
-  }, {
-    name: 'October',
-    days: 31
-  }, {
-    name: 'November',
-    days: 30
-  }, {
-    name: 'December',
-    days: 31
-  }];
+  const today = new Date();
+
+  const months = [];
+
+  const monthsFull = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  for (i = 1; i < 13; i ++) {
+    const daysOfMonth = new Date(today.getFullYear(), i, 0).getDate();
+    months.push({
+      name: monthsFull[i - 1],
+      days: daysOfMonth});
+  }
 
   let yearViewHTML = '';
   let eachDay = '';
@@ -193,10 +167,7 @@ function generateYear() {
   function generateEachDay(daysInMonth) {
     for (day = 1; day <= daysInMonth; day++) {
       eachDay += `
-              <li>
-                <div class="task yellow done">eat dinner</div>
-                <div class="task">change a bit</div>
-                <div class="task purple">do nothing</div>
+              <li class="done-content">
               </li>
             `;
     }
@@ -208,7 +179,7 @@ function generateYear() {
     yearViewHTML += `
             <div class="done-grid-item">
               <div class="done-header">${month.name}</div>
-              <div class="done-content">
+              <div>
                 <ol>
                   ${eachDay}
                 </ol>
@@ -383,20 +354,22 @@ function renderTask(viewSelected) {
     }); // get an array from .done-content's data-attribute
 
     tasks.forEach((task) => {
-    const taskDate = new Date(task.date);
+      const taskDate = new Date(task.date);
 
-    monthDates.forEach((monthDate, index) => {
-      if (isSameDate(taskDate, monthDate)) {
-        if (task.status) {
-          document.querySelectorAll('.month-view .done-content')[index]
-            .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
-        } else {
-          document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+      monthDates.forEach((monthDate, index) => {
+        if (isSameDate(taskDate, monthDate)) {
+          if (task.status) {
+            document.querySelectorAll('.month-view .done-content')[index]
+              .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+          } else {
+            document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+          }
         }
-      }
-    })
-  });
-}
+      })
+    });
+  } else if (viewSelected === 'year-view') {
+    generateYear();
+  }
 }
 
 // get today's date when the page first loads.
