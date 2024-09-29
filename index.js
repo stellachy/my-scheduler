@@ -398,7 +398,28 @@ function renderTask(viewSelected) {
       })
     });
   } else if (viewSelected === 'year-view') {
-    generateYear();
+    // generateYear();
+
+    const yearDates = [];
+    document.querySelectorAll('.year-view .done-content').forEach((done) => {
+      const { date } = done.dataset;
+      yearDates.push(new Date(date));
+    }); // get an array from .done-content's data-attribute
+
+    tasks.forEach((task) => {
+      const taskDate = new Date(task.date);
+
+      yearDates.forEach((yearDate, index) => {
+        if (isSameDate(taskDate, yearDate)) {
+          if (task.status) {
+            document.querySelectorAll('.year-view .done-content')[index]
+              .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+          } else {
+            document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+          }
+        }
+      })
+    });
   }
 }
 
