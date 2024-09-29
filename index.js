@@ -264,8 +264,10 @@ function getInput(status, color) {
   let date = document.getElementById('task-card-date').value;
   let time = document.getElementById('task-card-time').value;
   let more = document.getElementById('task-card-more').value;
+  const id = generateUniqueId();
 
   tasks.push({
+    id,
     color,
     title,
     date,
@@ -273,6 +275,10 @@ function getInput(status, color) {
     more,
     status
   });
+}
+
+function generateUniqueId() {
+  return crypto.randomUUID();
 }
 
 function clearInput() {
@@ -348,14 +354,18 @@ function renderTask(viewSelected) {
         // 是的話再做下面這些事情
         if (task.status) {
           document.querySelectorAll('.day-view .done-content')[0]
-            .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+            .innerHTML += `<span 
+            class="task ${task.color} ${task.status}"
+            data-id="${task.id}"
+            >${task.title}</span>`;
         } else {
-          document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+          document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}"
+          data-id="${task.id}"
+          >${task.title}</span>`;
         }
       }
     });
-  }
-  else if (viewSelected === 'week-view') {
+  } else if (viewSelected === 'week-view') {
     const weekDates = [];
     document.querySelectorAll('.week-view .done-content').forEach((done) => {
       const { date } = done.dataset
@@ -421,6 +431,7 @@ function renderTask(viewSelected) {
       })
     });
   }
+  hoverToDisplay();
 }
 
 // get today's date when the page first loads.
@@ -480,6 +491,22 @@ function getSunday(today) {
   today.setHours(24 * (7 - day));
 
   return new Date(today.toDateString());
+}
+
+function hoverToDisplay() {
+  document.querySelectorAll('span.task').forEach(taskBox => {
+    taskBox.onmouseover = () => {
+      const {id} = taskBox.dataset;
+      
+      tasks.forEach(task => {
+        if (task.id === id) {
+          console.log(`
+            ${task.id}-${task.title}|${task.date}|${task.time}|${task.more}
+            `);
+        }
+      });
+    }
+  })
 }
 
 // localStorage.clear();
