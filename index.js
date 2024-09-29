@@ -154,28 +154,38 @@ function generateYear() {
   const months = [];
 
   const monthsFull = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  for (i = 1; i < 13; i ++) {
+  for (i = 1; i < 13; i++) {
     const daysOfMonth = new Date(today.getFullYear(), i, 0).getDate();
     months.push({
       name: monthsFull[i - 1],
-      days: daysOfMonth});
+      days: daysOfMonth
+    });
   }
+
+  const yearDates = [];
+  getYearDates().forEach((month) => {
+    const monthDates =
+      month.monthDates.map((date) => {
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      })
+    yearDates.push(monthDates);
+  });
 
   let yearViewHTML = '';
   let eachDay = '';
 
-  function generateEachDay(daysInMonth) {
+  function generateEachDay(index, daysInMonth) {
     for (day = 1; day <= daysInMonth; day++) {
       eachDay += `
-              <li class="done-content">
+              <li class="done-content" data-date="${yearDates[index][day - 1]}">
               </li>
             `;
     }
     return eachDay;
   }
 
-  months.forEach((month) => {
-    eachDay = generateEachDay(month.days);
+  months.forEach((month, index) => {
+    eachDay = generateEachDay(index, month.days);
     yearViewHTML += `
             <div class="done-grid-item">
               <div class="done-header">${month.name}</div>
@@ -194,6 +204,26 @@ function generateYear() {
     .innerHTML = yearViewHTML;
 }
 generateYear();
+
+function getYearDates() {
+  const yearDates = [];
+  const today = new Date();
+  for (i = 0; i < 12; i++) {
+    const daysOfMonths = new Date(today.getFullYear(), i + 1, 0).getDate()
+    const firstDayOfMonth = new Date(today.getFullYear(), i, 1)
+    const monthDates = []
+    for (j = 0; j < daysOfMonths; j++) {
+      const day = new Date(firstDayOfMonth)
+      day.setDate(firstDayOfMonth.getDate() + j)
+      monthDates.push(day)
+    }
+
+    yearDates.push(
+      { monthDates }
+    );
+  }
+  return yearDates;
+}
 
 // button functions
 // related to displaying task card
