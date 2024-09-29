@@ -379,9 +379,15 @@ function renderTask(viewSelected) {
         if (isSameDate(taskDate, weekDate)) {
           if (task.status) {
             document.querySelectorAll('.week-view .done-content')[index]
-              .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+              .innerHTML += `<span 
+                class="task ${task.color} ${task.status}"
+                data-id="${task.id}"
+                >${task.title}</span>`;
           } else {
-            document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+            document.getElementById('toDoContent').innerHTML += `<span  
+              class="task ${task.color}"
+              data-id="${task.id}"
+            >${task.title}</span>`;
           }
         }
       })
@@ -400,16 +406,20 @@ function renderTask(viewSelected) {
         if (isSameDate(taskDate, monthDate)) {
           if (task.status) {
             document.querySelectorAll('.month-view .done-content')[index]
-              .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+              .innerHTML += `<span 
+                class="task ${task.color} ${task.status}"
+                data-id="${task.id}"
+                >${task.title}</span>`;
           } else {
-            document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+            document.getElementById('toDoContent').innerHTML += `<span 
+              class="task ${task.color}"
+              data-id="${task.id}"
+              >${task.title}</span>`;
           }
         }
       })
     });
   } else if (viewSelected === 'year-view') {
-    // generateYear();
-
     const yearDates = [];
     document.querySelectorAll('.year-view .done-content').forEach((done) => {
       const { date } = done.dataset;
@@ -423,9 +433,15 @@ function renderTask(viewSelected) {
         if (isSameDate(taskDate, yearDate)) {
           if (task.status) {
             document.querySelectorAll('.year-view .done-content')[index]
-              .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
+              .innerHTML += `<span 
+                class="task ${task.color} ${task.status}"
+                data-id="${task.id}"
+                >${task.title}</span>`;
           } else {
-            document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}">${task.title}</span>`;
+            document.getElementById('toDoContent').innerHTML += `<span 
+              class="task ${task.color}"
+              data-id="${task.id}"
+              >${task.title}</span>`;
           }
         }
       })
@@ -496,8 +512,8 @@ function getSunday(today) {
 function hoverToDisplay() {
   document.querySelectorAll('span.task').forEach(taskBox => {
     taskBox.onmouseover = () => {
-      const {id} = taskBox.dataset;
-      
+      const { id } = taskBox.dataset;
+
       tasks.forEach(task => {
         if (task.id === id) {
           console.log(`
