@@ -1,40 +1,17 @@
-// make changing view possible by showing / hiding different section!
-let viewSelected = 'day-view';
-function handleViewChange() {
-  document.getElementById('view-selector').addEventListener('change', (event) => {
-    viewSelected = event.target.value;
+// get today's date when the page first loads.
+const today = new Date("2024-10-14");
 
-    document.querySelectorAll('.done-section').forEach((section) => {
-      section.classList.remove('active');
-    });
-
-    document.querySelector(`.${viewSelected}`)
-      .classList.add('active');
-
-    renderTask(viewSelected);
-
-    // this helps change the title
-    getFormattedDate(today);
-
-    // this helps change the size of "to-do-section" depending on the view (here is for the month-&year- view!)
-    if (viewSelected === 'month-view' || viewSelected === 'year-view') {
-      document.querySelector('.to-do-section').
-        classList.add('smaller-size');
-    } else {
-      document.querySelector('.to-do-section').
-        classList.remove('smaller-size');
-    }
-  });
+// add date to the done-content in the day-view
+function addDate(today){
+  const doneContentElem = document.querySelector('.day-view .done-content')
+  doneContentElem.setAttribute('data-date', `${today}`)
 }
-handleViewChange();
-
-// console.log(viewSelected);
+addDate(today);
 
 // this generate the week-view
-function generateWeek() {
+function generateWeek(today) {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   let weekViewHTML = '';
-  const today = new Date();
   const currenttMonday = getMonday(today);
   const weekDates = getWeekDates(currenttMonday).map((date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
@@ -55,7 +32,7 @@ function generateWeek() {
   document.querySelector('.week-view .done-grid')
     .innerHTML = weekViewHTML;
 }
-generateWeek();
+generateWeek(today);
 
 function getWeekDates(currenttMonday) {
   const weekDates = [];
@@ -71,10 +48,10 @@ function getWeekDates(currenttMonday) {
 }
 
 // this generate the month-grid!
-function generateMonth(daysInMonth, firstDayOfMonth) {
+function generateMonth(today, daysInMonth, firstDayOfMonth) {
   const month = document.getElementById('month');
 
-  const monthDates = getMonthDates(daysInMonth).map((date) => {
+  const monthDates = getMonthDates(today, daysInMonth).map((date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   })
 
@@ -118,10 +95,9 @@ function generateMonth(daysInMonth, firstDayOfMonth) {
     weekDayOfMonth++;
   }
 }
-generateMonth(getDaysInCurrentMonth(), getFirstDayOfMonth());
+generateMonth(today, getDaysInCurrentMonth(today), getFirstDayOfMonth(today));
 
-function getMonthDates(daysInMonth) {
-  const today = new Date();
+function getMonthDates(today, daysInMonth) {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
   const monthDates = [];
 
@@ -135,22 +111,18 @@ function getMonthDates(daysInMonth) {
   return monthDates;
 }
 
-function getFirstDayOfMonth() {
-  const today = new Date();
+function getFirstDayOfMonth(today) {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
   return firstDayOfMonth;
 }
 
-function getDaysInCurrentMonth() {
-  const today = new Date();
+function getDaysInCurrentMonth(today) {
   const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   return daysInMonth;
 }
 
 // this generate year-view grid!
-function generateYear() {
-  const today = new Date();
-
+function generateYear(today) {
   const months = [];
 
   const monthsFull = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -163,7 +135,7 @@ function generateYear() {
   }
 
   const yearDates = [];
-  getYearDates().forEach((month) => {
+  getYearDates(today).forEach((month) => {
     const monthDates =
       month.monthDates.map((date) => {
         return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -203,11 +175,10 @@ function generateYear() {
   document.getElementById('year-view-grid')
     .innerHTML = yearViewHTML;
 }
-generateYear();
+generateYear(today);
 
-function getYearDates() {
+function getYearDates(today) {
   const yearDates = [];
-  const today = new Date();
   for (i = 0; i < 12; i++) {
     const daysOfMonths = new Date(today.getFullYear(), i + 1, 0).getDate()
     const firstDayOfMonth = new Date(today.getFullYear(), i, 1)
@@ -328,10 +299,6 @@ addBtn.onclick = () => {
   clearInput();
 }
 
-// add date to the done-content in the day-view
-const doneContentElem = document.querySelector('.day-view .done-content')
-doneContentElem.setAttribute('data-date', `${new Date()}`)
-
 function renderTask(viewSelected) {
   function isSameDate(taskDate, contentDate) {
     return taskDate.getFullYear() === contentDate.getFullYear() &&
@@ -346,6 +313,7 @@ function renderTask(viewSelected) {
 
   if (viewSelected === 'day-view') {
     // get the doneContentDate for today
+    const doneContentElem = document.querySelector('.day-view .done-content')
     const doneContentDate = new Date(doneContentElem.dataset.date)
     tasks.forEach((task) => {
       const taskDate = new Date(task.date);
@@ -471,15 +439,7 @@ function renderTask(viewSelected) {
   hoverToDisplay();
 }
 
-// get today's date when the page first loads.
-const today = new Date();
-
-// display tasks when the page first loads.
-renderTask(viewSelected);
-
-getFormattedDate(today);
-
-function getFormattedDate(today) {
+function displayHeader(today) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const monthsFull = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -490,6 +450,8 @@ function getFormattedDate(today) {
   const year = today.getFullYear();
   const currenttMonday = getMonday(today).getDate();
   const currentSunday = getSunday(today).getDate();
+  // this helps display the month name of the next-month (when there are two different months)
+  const nextMonth = getMonday(today).getMonth() == getSunday(today).getMonth() ? '' : months[getSunday(today).getMonth()]
   const monthFullName = monthsFull[today.getMonth()];
 
   // display different titles depending on views~
@@ -497,7 +459,7 @@ function getFormattedDate(today) {
     document.querySelector('.header-view-day').innerText = dayName;
     document.querySelector('.header-view-date').innerText = `${monthName} ${day}, ${year}`;
   } else if (viewSelected === 'week-view') {
-    document.querySelector('.header-view-day').innerText = `${monthName} ${currenttMonday} - ${currentSunday}, ${year}`;
+    document.querySelector('.header-view-day').innerText = `${monthName} ${currenttMonday} - ${nextMonth} ${currentSunday}, ${year}`;
     document.querySelector('.header-view-date').innerText = '';
   } else if (viewSelected === 'month-view') {
     document.querySelector('.header-view-day').innerText = `${monthFullName}, ${year}`;
@@ -511,7 +473,6 @@ function getFormattedDate(today) {
 console.log(tasks);
 
 function getMonday(today) {
-  today = new Date(today)
   const day = today.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
   // if (day !== 1) { // check if it's monday
 
@@ -522,7 +483,6 @@ function getMonday(today) {
 }
 
 function getSunday(today) {
-  today = new Date(today)
   const day = today.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
 
   today.setHours(24 * (7 - day));
@@ -562,5 +522,39 @@ function hoverToDisplay() {
     }
   })
 }
+
+// make changing view possible by showing / hiding different section!
+let viewSelected = 'day-view';
+function handleViewChange() {
+  document.getElementById('view-selector').addEventListener('change', (event) => {
+    viewSelected = event.target.value;
+
+    document.querySelectorAll('.done-section').forEach((section) => {
+      section.classList.remove('active');
+    });
+
+    document.querySelector(`.${viewSelected}`)
+      .classList.add('active');
+
+    renderTask(viewSelected);
+
+    displayHeader(today);
+
+    // this helps change the size of "to-do-section" depending on the view (here is for the month-&year- view!)
+    if (viewSelected === 'month-view' || viewSelected === 'year-view') {
+      document.querySelector('.to-do-section').
+        classList.add('smaller-size');
+    } else {
+      document.querySelector('.to-do-section').
+        classList.remove('smaller-size');
+    }
+  });
+}
+handleViewChange();
+
+// display tasks when the page first loads.
+renderTask(viewSelected);
+
+displayHeader(today);
 
 // localStorage.clear();
