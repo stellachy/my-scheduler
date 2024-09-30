@@ -15,7 +15,7 @@
   <header>
     <div class="header-container">
       <span class="material-symbols-outlined header-menu-icon">menu</span>
-      <span class="header-title">My Secheduler</span>
+      <span class="header-title">My Scheduler</span>
       <!-- goes back to the original one! -->
       <span class="header-view-changer">
         <select name="change-view" id="view-selector">
@@ -26,17 +26,19 @@
         </select>
       </span>
       <span class="header-view-detail">
-        <span class="header-view-day"></span> |
+        <span class="header-view-day"></span>
         <span class="header-view-date"></span>
       </span>
 
-      <button id="todayBtn" class="header-today">today</button>
-      <button id="prevBtn" class="header-prev">
-        <span class="material-symbols-outlined">chevron_backward</span>
-      </button>
-      <button id="nextBtn" class="header-next">
-        <span class="material-symbols-outlined">chevron_forward</span>
-      </button>
+      <span class="btn-container">
+        <button id="todayBtn" class="header-today">today</button>
+        <button id="prevBtn" class="header-prev">
+          <span class="material-symbols-outlined">chevron_backward</span>
+        </button>
+        <button id="nextBtn" class="header-next">
+          <span class="material-symbols-outlined">chevron_forward</span>
+        </button>
+      </span>
     </div>
   </header>
   <main>
@@ -46,9 +48,7 @@
 
       <div class="to-do-header" id="displayText">
         <div class="to-do-header-text">To dos</div>
-        <span class="material-symbols-outlined to-do-header-icon"
-              id="displayIcon"
-        >add_circle</span>
+        <span class="material-symbols-outlined to-do-header-icon" id="displayIcon">add_circle</span>
       </div>
 
       <div class="task-card">

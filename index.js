@@ -506,7 +506,7 @@ function displayHeader(today) {
 
   // display different titles depending on views~
   if (viewSelected === 'day-view') {
-    document.querySelector('.header-view-day').innerText = dayName;
+    document.querySelector('.header-view-day').innerText = `${dayName}  |`;
     document.querySelector('.header-view-date').innerText = `${monthName} ${day}, ${year}`;
   } else if (viewSelected === 'week-view') {
     document.querySelector('.header-view-day').innerText = `${monthName} ${currentMonday} - ${nextMonth} ${currentSunday}, ${year}`;
@@ -588,8 +588,8 @@ function handleViewChange(today) {
 
     document.querySelector(`.${viewSelected}`)
       .classList.add('active');
-
-    renderTask(viewSelected);
+    
+    changeDate(today);
 
     displayHeader(today);
 
