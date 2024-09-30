@@ -355,13 +355,19 @@ function renderTask(viewSelected) {
         if (task.status) {
           document.querySelectorAll('.day-view .done-content')[0]
             .innerHTML += `<span 
-            class="task ${task.color} ${task.status}"
-            data-id="${task.id}"
-            >${task.title}</span>`;
+              class="task ${task.color} ${task.status}"
+              data-id="${task.id}"
+              >${task.title}</span>
+              <div class="task-popup"></div>
+            `;
         } else {
-          document.getElementById('toDoContent').innerHTML += `<span class="task ${task.color}"
-          data-id="${task.id}"
-          >${task.title}</span>`;
+          document.getElementById('toDoContent')
+            .innerHTML += `<span      
+              class="task ${task.color}"
+              data-id="${task.id}"
+              >${task.title}</span>
+              <div class="task-popup"></div>
+            `;
         }
       }
     });
@@ -382,12 +388,17 @@ function renderTask(viewSelected) {
               .innerHTML += `<span 
                 class="task ${task.color} ${task.status}"
                 data-id="${task.id}"
-                >${task.title}</span>`;
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
           } else {
-            document.getElementById('toDoContent').innerHTML += `<span  
-              class="task ${task.color}"
-              data-id="${task.id}"
-            >${task.title}</span>`;
+            document.getElementById('toDoContent')
+              .innerHTML += `<span  
+                class="task ${task.color}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
           }
         }
       })
@@ -409,12 +420,17 @@ function renderTask(viewSelected) {
               .innerHTML += `<span 
                 class="task ${task.color} ${task.status}"
                 data-id="${task.id}"
-                >${task.title}</span>`;
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
           } else {
-            document.getElementById('toDoContent').innerHTML += `<span 
-              class="task ${task.color}"
-              data-id="${task.id}"
-              >${task.title}</span>`;
+            document.getElementById('toDoContent')
+              .innerHTML += `<span 
+                class="task ${task.color}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
           }
         }
       })
@@ -436,12 +452,17 @@ function renderTask(viewSelected) {
               .innerHTML += `<span 
                 class="task ${task.color} ${task.status}"
                 data-id="${task.id}"
-                >${task.title}</span>`;
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
           } else {
-            document.getElementById('toDoContent').innerHTML += `<span 
-              class="task ${task.color}"
-              data-id="${task.id}"
-              >${task.title}</span>`;
+            document.getElementById('toDoContent')
+              .innerHTML += `<span 
+                class="task ${task.color}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
           }
         }
       })
@@ -513,14 +534,31 @@ function hoverToDisplay() {
   document.querySelectorAll('span.task').forEach(taskBox => {
     taskBox.onmouseover = () => {
       const { id } = taskBox.dataset;
+      let matchingTask;
 
       tasks.forEach(task => {
         if (task.id === id) {
-          console.log(`
-            ${task.id}-${task.title}|${task.date}|${task.time}|${task.more}
-            `);
+          matchingTask = task;
         }
       });
+
+      const taskPopup = taskBox.nextElementSibling;
+      taskPopup.innerHTML = `
+        <div class="task-card-grid">
+          <label for="task-card-title" class="title">Title</label>
+          <span class="details">${matchingTask.title}</span>
+
+          <label for="task-card-date">Date</label>
+          <span class="details">${matchingTask.date}</span>
+
+          <label for="task-card-time">Time</label>
+          <span class="details">${matchingTask.time}</span>
+
+          <label for="task-card-more" class="more">More</label>
+          <span class="details">${matchingTask.more}</span>
+        </div>
+      </div>
+      `
     }
   })
 }
