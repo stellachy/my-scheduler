@@ -1,8 +1,58 @@
 // get today's date when the page first loads.
-const today = new Date("2024-10-14");
+const today = new Date();
+let displayToday = new Date();
+
+document.getElementById('todayBtn');
+todayBtn.onclick = () => {
+  changeDate(today);
+
+  // 再displayToday也改設為今天！
+  displayToday = new Date();
+};
+
+document.getElementById('prevBtn');
+prevBtn.onclick = () => {
+  const day = new Date(displayToday);
+  if (viewSelected === 'day-view') {
+    displayToday = new Date(day.setDate(displayToday.getDate() - 1));
+  } else if (viewSelected === 'week-view') {
+    displayToday = new Date(day.setDate(displayToday.getDate() - 7));
+  } else if (viewSelected === 'month-view') {
+    displayToday = new Date(displayToday.getFullYear(), displayToday.getMonth() - 1, 1);
+  } else if (viewSelected === 'year-view') {
+    displayToday = new Date(displayToday.getFullYear() - 1, 0, 1);
+  }
+
+  changeDate(displayToday);
+};
+
+document.getElementById('nextBtn');
+nextBtn.onclick = () => {
+  const day = new Date(displayToday);
+  if (viewSelected === 'day-view') {
+    displayToday = new Date(day.setDate(displayToday.getDate() + 1));
+  } else if (viewSelected === 'week-view') {
+    displayToday = new Date(day.setDate(displayToday.getDate() + 7));
+  } else if (viewSelected === 'month-view') {
+    displayToday = new Date(displayToday.getFullYear(), displayToday.getMonth() + 1, 1);
+  } else if (viewSelected === 'year-view') {
+    displayToday = new Date(displayToday.getFullYear() + 1, 0, 1);
+  }
+
+  changeDate(displayToday);
+};
+
+function changeDate(day) {
+  addDate(day);
+  generateWeek(day);
+  generateMonth(day, getDaysInCurrentMonth(day), getFirstDayOfMonth(day));
+  generateYear(day);
+  displayHeader(day);
+  renderTask(viewSelected);
+}
 
 // add date to the done-content in the day-view
-function addDate(today){
+function addDate(today) {
   const doneContentElem = document.querySelector('.day-view .done-content')
   doneContentElem.setAttribute('data-date', `${today}`)
 }
@@ -12,8 +62,8 @@ addDate(today);
 function generateWeek(today) {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   let weekViewHTML = '';
-  const currenttMonday = getMonday(today);
-  const weekDates = getWeekDates(currenttMonday).map((date) => {
+  const currentMonday = getMonday(today);
+  const weekDates = getWeekDates(currentMonday).map((date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   })  // get日期的objects的array之後，map出一個array裡面放我想要的值就好（e.g. 2024-9-23）
 
@@ -34,13 +84,13 @@ function generateWeek(today) {
 }
 generateWeek(today);
 
-function getWeekDates(currenttMonday) {
+function getWeekDates(currentMonday) {
   const weekDates = [];
 
   // loop through the week & create the date data for Mon to Sun
   for (i = 0; i < 7; i++) {
-    const day = new Date(currenttMonday);
-    day.setDate(currenttMonday.getDate() + i);
+    const day = new Date(currentMonday);
+    day.setDate(currentMonday.getDate() + i);
     weekDates.push(day);
   }
 
@@ -448,10 +498,10 @@ function displayHeader(today) {
   const monthName = months[today.getMonth()];
   const day = today.getDate();
   const year = today.getFullYear();
-  const currenttMonday = getMonday(today).getDate();
+  const currentMonday = getMonday(today).getDate();
   const currentSunday = getSunday(today).getDate();
   // this helps display the month name of the next-month (when there are two different months)
-  const nextMonth = getMonday(today).getMonth() == getSunday(today).getMonth() ? '' : months[getSunday(today).getMonth()]
+  const nextMonth = getMonday(today).getMonth() == getSunday(today).getMonth() ? '' : months[getSunday(today).getMonth()];
   const monthFullName = monthsFull[today.getMonth()];
 
   // display different titles depending on views~
@@ -459,7 +509,7 @@ function displayHeader(today) {
     document.querySelector('.header-view-day').innerText = dayName;
     document.querySelector('.header-view-date').innerText = `${monthName} ${day}, ${year}`;
   } else if (viewSelected === 'week-view') {
-    document.querySelector('.header-view-day').innerText = `${monthName} ${currenttMonday} - ${nextMonth} ${currentSunday}, ${year}`;
+    document.querySelector('.header-view-day').innerText = `${monthName} ${currentMonday} - ${nextMonth} ${currentSunday}, ${year}`;
     document.querySelector('.header-view-date').innerText = '';
   } else if (viewSelected === 'month-view') {
     document.querySelector('.header-view-day').innerText = `${monthFullName}, ${year}`;
@@ -473,21 +523,24 @@ function displayHeader(today) {
 console.log(tasks);
 
 function getMonday(today) {
-  const day = today.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
+  const theDay = new Date(today);
+  const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
   // if (day !== 1) { // check if it's monday
 
-  today.setHours(-24 * (day - 1));
+  theDay.setHours(-24 * (day - 1));
   // }
 
-  return new Date(today.toDateString());
+  return new Date(theDay.toDateString());
 }
 
 function getSunday(today) {
-  const day = today.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
+  const theDay = new Date(today);
 
-  today.setHours(24 * (7 - day));
+  const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
 
-  return new Date(today.toDateString());
+  theDay.setHours(24 * (7 - day));
+
+  return new Date(theDay.toDateString());
 }
 
 function hoverToDisplay() {
@@ -525,7 +578,7 @@ function hoverToDisplay() {
 
 // make changing view possible by showing / hiding different section!
 let viewSelected = 'day-view';
-function handleViewChange() {
+function handleViewChange(today) {
   document.getElementById('view-selector').addEventListener('change', (event) => {
     viewSelected = event.target.value;
 
@@ -540,6 +593,9 @@ function handleViewChange() {
 
     displayHeader(today);
 
+    // after changing the view, the date goes back to today.
+    displayToday = new Date();
+
     // this helps change the size of "to-do-section" depending on the view (here is for the month-&year- view!)
     if (viewSelected === 'month-view' || viewSelected === 'year-view') {
       document.querySelector('.to-do-section').
@@ -550,7 +606,7 @@ function handleViewChange() {
     }
   });
 }
-handleViewChange();
+handleViewChange(today);
 
 // display tasks when the page first loads.
 renderTask(viewSelected);
