@@ -614,6 +614,7 @@ function displayHeader(today) {
   const currentMonday = getMonday(today).getDate();
   const currentSunday = getSunday(today).getDate();
   // this helps display the month name of the next-month (when there are two different months)
+  const prevMonth = months[getMonday(today).getMonth()];
   const nextMonth = getMonday(today).getMonth() == getSunday(today).getMonth() ? '' : months[getSunday(today).getMonth()];
   const monthFullName = monthsFull[today.getMonth()];
 
@@ -622,7 +623,7 @@ function displayHeader(today) {
     document.querySelector('.header-view-day').innerText = `${dayName}  |`;
     document.querySelector('.header-view-date').innerText = `${monthName} ${day}, ${year}`;
   } else if (viewSelected === 'week-view') {
-    document.querySelector('.header-view-day').innerText = `${monthName} ${currentMonday} - ${nextMonth} ${currentSunday}, ${year}`;
+    document.querySelector('.header-view-day').innerText = `${prevMonth} ${currentMonday} - ${nextMonth} ${currentSunday}, ${year}`;
     document.querySelector('.header-view-date').innerText = '';
   } else if (viewSelected === 'month-view') {
     document.querySelector('.header-view-day').innerText = `${monthFullName}, ${year}`;
