@@ -5,6 +5,7 @@ let displayToday = new Date();
 document.getElementById('todayBtn');
 todayBtn.onclick = () => {
   changeDate(today);
+  renderCalendar(currentMonth, currentYear);
 
   // 再displayToday也改設為今天！
   displayToday = new Date();
@@ -42,9 +43,21 @@ nextBtn.onclick = () => {
   changeDate(displayToday);
 };
 
+// move the mouse insied the box to make the lil calendar appear
 document.getElementById('dateChanger');
-dateChanger.onclick = () => {
-  console.log('hou u doing?')
+const calendarContainer = document.querySelector('.calendar-container');
+dateChanger.onmousemove = () => {
+  calendarContainer.style.display = 'block';
+}
+
+// move mouse outside of the container to make it disappear
+document.onmouseover = (event) => {
+  // check if the click is outside the calendarContainer and dateChanger
+  if (!calendarContainer.contains(event.target) &&
+    !dateChanger.contains(event.target)) {
+    calendarContainer.style.display = 'none';
+    isClicked = true;
+  }
 }
 
 function changeDate(day) {
@@ -63,7 +76,7 @@ const monthYear = document.getElementById('monthYear');
 let currentMonth = today.getMonth();
 let currentYear = today.getFullYear();
 
-function renderCalendar(today, currentMonth, currentYear) {
+function renderCalendar(currentMonth, currentYear) {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // prevMonth btn
@@ -74,6 +87,7 @@ function renderCalendar(today, currentMonth, currentYear) {
       currentYear--;
     }
     renderCalendar(currentMonth, currentYear);
+    calendarChange();
   })
 
   // nextMonth btn
@@ -83,7 +97,9 @@ function renderCalendar(today, currentMonth, currentYear) {
       currentMonth = 0;
       currentYear++;
     }
+
     renderCalendar(currentMonth, currentYear);
+    calendarChange();
   })
 
   calendarBody.innerHTML = '';  // clear previous days
@@ -91,7 +107,7 @@ function renderCalendar(today, currentMonth, currentYear) {
   monthYear.innerHTML = `${months[currentMonth]}, ${currentYear}`; // set month, year display
 
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();  // get the day of the first date in the current month
-  const numDays = getDaysInMonth(today);  // get number of days
+  const numDays = new Date(currentYear, currentMonth + 1, 0).getDate();  // get number of days
 
   // generate the calendar rows
   let date = 1;
@@ -110,19 +126,8 @@ function renderCalendar(today, currentMonth, currentYear) {
         cell.innerHTML = date;
         cell.classList.add('displayed');
         cell.classList.add('notToday');
-        const cellElem = document.querySelectorAll('td.displayed.notToday');
-        // 這個好像沒有取到最後一排？
-        cellElem.forEach(cell => {
-          cell.onclick = () => {
-            // cellElem.forEach(cell => cell.style.backgroundColor = 'transparent');
-            cellElem.forEach(cell => cell.style.border = 'none');
-            console.log(cell);
 
-            // cell.style.backgroundColor = 'var(--section-color)';
-            cell.style.border = '1px solid var(--text-light)';
-          };
-        })
-
+        // highlight today's date!
         if (date === today.getDate() &&
           currentMonth === today.getMonth() &&
           currentYear === today.getFullYear()) {
@@ -130,17 +135,35 @@ function renderCalendar(today, currentMonth, currentYear) {
           cell.style.borderRadius = '50%'
           cell.classList.remove('notToday');
         }
+        cell.setAttribute('data-date', `${currentYear}-${currentMonth + 1}-${date}`)
 
         date++;
       }
       row.appendChild(cell);
     }
-
     calendarBody.appendChild(row);
-    if (date > numDays) break;
   }
 }
-renderCalendar(today, currentMonth, currentYear);
+renderCalendar(currentMonth, currentYear);
+
+// after the date is clicked, change the date accordingly.
+function calendarChange() {
+  const cellElem = document.querySelectorAll('td.displayed');
+  cellElem.forEach(td => {
+    td.onclick = () => {
+      const { date } = td.dataset;
+      let day = new Date(date)
+
+      displayToday = day;
+      changeDate(displayToday);
+
+      // for marking the specifically selected day
+      cellElem.forEach(cell => cell.style.border = 'none');
+      td.style.border = '2px solid var(--text-light)';
+    }
+  });
+}
+calendarChange();
 
 // add date to the done-content in the day-view
 function addDate(today) {
@@ -403,7 +426,6 @@ function clearInput() {
 function saveToStorage() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
-
 
 // get color after tags being clicked
 let color = '';

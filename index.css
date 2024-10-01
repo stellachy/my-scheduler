@@ -72,9 +72,10 @@ main {
 }
 
 .calendar-container {
+  display: none;
   position: fixed;
   top: 40px;
-  left: 270px;
+  left: 320px;
 
   width: 210px;
   background-color: var(--button-color);
@@ -120,7 +121,8 @@ main {
 .calendar td {
   line-height: 2;
   border-radius: 50%;
-  padding: 0px 2px;
+  padding: 2px 2px;
+  box-sizing: border-box;
 }
 
 .calendar td.displayed {
