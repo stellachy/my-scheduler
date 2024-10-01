@@ -6,6 +6,7 @@ document.getElementById('todayBtn');
 todayBtn.onclick = () => {
   changeDate(today);
   renderCalendar(currentMonth, currentYear);
+  calendarChange();  // making the btn for each date interactive
 
   // 再displayToday也改設為今天！
   displayToday = new Date();
@@ -114,7 +115,7 @@ function renderCalendar(currentMonth, currentYear) {
   for (let i = 0; i < 6; i++) {
     let row = document.createElement('tr');
 
-    for (let j = 0; j < 7; j++) {
+    for (let j = 1; j < 8; j++) {
       let cell = document.createElement('td');
       if (i === 0 && j < firstDay) {
         // empty cell before the first day
@@ -704,6 +705,8 @@ function handleViewChange(today) {
       .classList.add('active');
 
     changeDate(today);
+    renderCalendar(currentMonth, currentYear);
+    calendarChange();  // making the btn for each date interactive
 
     displayHeader(today);
 
