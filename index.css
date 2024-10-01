@@ -66,6 +66,71 @@ main {
   margin: 0px 6px
 }
 
+/* creating a lil calendar for users to select days */
+.header-view-detail:hover {
+  cursor: pointer;
+}
+
+.calendar-container {
+  position: fixed;
+  top: 40px;
+  left: 270px;
+
+  width: 210px;
+  background-color: var(--button-color);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border-bottom: 1px solid var(--text-color);
+}
+
+.nav-btn {
+  font-size: 13px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin: 6px;
+  padding: 0;
+}
+
+.nav-btn:hover {
+  color: var(--text-light);
+}
+
+.calendar {
+  width: 100%;
+  table-layout: fixed;
+  text-align: center;
+  font-size: 14px;
+
+  border-spacing: 0px; 
+  padding: 7px 15px;
+}
+
+.calendar th {
+  color: var(--text-light);
+  line-height: 2;
+}
+
+.calendar td {
+  line-height: 2;
+  border-radius: 50%;
+  padding: 0px 2px;
+}
+
+.calendar td.displayed {
+  cursor: pointer;
+}
+
+.calendar td.displayed:hover {
+  background-color: var(--text-light);
+}
+
 .header-view-day, 
 .header-view-date {
   margin-right: 6px;

@@ -25,12 +25,37 @@
           <option value="year-view">Year</option>
         </select>
       </span>
-      <span class="header-view-detail">
+      <span id="dateChanger" class="header-view-detail">
         <span class="header-view-day"></span>
         <span class="header-view-date"></span>
       </span>
 
-      <span class="btn-container">
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <span id="monthYear"></span>
+          <div>
+            <button id="prevMonth" class="nav-btn">◀</button>
+            <button id="nextMonth" class="nav-btn">▶</button>
+          </div>
+        </div>
+
+        <table class="calendar">
+          <thead>
+            <tr>
+              <th>M</th>
+              <th>T</th>
+              <th>W</th>
+              <th>T</th>
+              <th>F</th>
+              <th>S</th>
+              <th>S</th>
+            </tr>
+          </thead>
+          <tbody id="calendarBody"></tbody>
+        </table>
+      </div>
+
+      <div class="btn-container">
         <button id="todayBtn" class="header-today">today</button>
         <button id="prevBtn" class="header-prev">
           <span class="material-symbols-outlined">chevron_backward</span>
@@ -38,7 +63,7 @@
         <button id="nextBtn" class="header-next">
           <span class="material-symbols-outlined">chevron_forward</span>
         </button>
-      </span>
+      </div>
     </div>
   </header>
   <main>

@@ -42,14 +42,105 @@ nextBtn.onclick = () => {
   changeDate(displayToday);
 };
 
+document.getElementById('dateChanger');
+dateChanger.onclick = () => {
+  console.log('hou u doing?')
+}
+
 function changeDate(day) {
   addDate(day);
   generateWeek(day);
-  generateMonth(day, getDaysInCurrentMonth(day), getFirstDayOfMonth(day));
+  generateMonth(day, getDaysInMonth(day), getFirstDayOfMonth(day));
   generateYear(day);
   displayHeader(day);
   renderTask(viewSelected);
 }
+
+// generate a lil calendar
+const calendarBody = document.getElementById('calendarBody');
+const monthYear = document.getElementById('monthYear');
+
+let currentMonth = today.getMonth();
+let currentYear = today.getFullYear();
+
+function renderCalendar(today, currentMonth, currentYear) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  // prevMonth btn
+  document.getElementById('prevMonth').addEventListener('click', () => {
+    currentMonth--;
+    if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    }
+    renderCalendar(currentMonth, currentYear);
+  })
+
+  // nextMonth btn
+  document.getElementById('nextMonth').addEventListener('click', () => {
+    currentMonth++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    renderCalendar(currentMonth, currentYear);
+  })
+
+  calendarBody.innerHTML = '';  // clear previous days
+
+  monthYear.innerHTML = `${months[currentMonth]}, ${currentYear}`; // set month, year display
+
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();  // get the day of the first date in the current month
+  const numDays = getDaysInMonth(today);  // get number of days
+
+  // generate the calendar rows
+  let date = 1;
+  for (let i = 0; i < 6; i++) {
+    let row = document.createElement('tr');
+
+    for (let j = 0; j < 7; j++) {
+      let cell = document.createElement('td');
+      if (i === 0 && j < firstDay) {
+        // empty cell before the first day
+        cell.innerHTML = '';
+      } else if (date > numDays) {
+        // stop filling after the last day of the month
+        cell.innerHTML = '';
+      } else {
+        cell.innerHTML = date;
+        cell.classList.add('displayed');
+        cell.classList.add('notToday');
+        const cellElem = document.querySelectorAll('td.displayed.notToday');
+        // 這個好像沒有取到最後一排？
+        cellElem.forEach(cell => {
+          cell.onclick = () => {
+            // cellElem.forEach(cell => cell.style.backgroundColor = 'transparent');
+            cellElem.forEach(cell => cell.style.border = 'none');
+            console.log(cell);
+
+            // cell.style.backgroundColor = 'var(--section-color)';
+            cell.style.border = '1px solid var(--text-light)';
+          };
+        })
+
+        if (date === today.getDate() &&
+          currentMonth === today.getMonth() &&
+          currentYear === today.getFullYear()) {
+          cell.style.backgroundColor = 'var(--tag-red)'
+          cell.style.borderRadius = '50%'
+          cell.classList.remove('notToday');
+        }
+
+        date++;
+      }
+      row.appendChild(cell);
+    }
+
+    calendarBody.appendChild(row);
+    if (date > numDays) break;
+  }
+}
+renderCalendar(today, currentMonth, currentYear);
 
 // add date to the done-content in the day-view
 function addDate(today) {
@@ -145,7 +236,7 @@ function generateMonth(today, daysInMonth, firstDayOfMonth) {
     weekDayOfMonth++;
   }
 }
-generateMonth(today, getDaysInCurrentMonth(today), getFirstDayOfMonth(today));
+generateMonth(today, getDaysInMonth(today), getFirstDayOfMonth(today));
 
 function getMonthDates(today, daysInMonth) {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
@@ -166,7 +257,7 @@ function getFirstDayOfMonth(today) {
   return firstDayOfMonth;
 }
 
-function getDaysInCurrentMonth(today) {
+function getDaysInMonth(today) {
   const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   return daysInMonth;
 }
@@ -588,7 +679,7 @@ function handleViewChange(today) {
 
     document.querySelector(`.${viewSelected}`)
       .classList.add('active');
-    
+
     changeDate(today);
 
     displayHeader(today);
