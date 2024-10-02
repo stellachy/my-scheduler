@@ -660,7 +660,42 @@ function getSunday(today) {
 
 function hoverToDisplay() {
   document.querySelectorAll('span.task').forEach(taskBox => {
-    taskBox.onmouseover = () => {
+    const taskPopup = taskBox.nextElementSibling;
+    let isEditing = false;
+    taskBox.onmouseenter = () => {
+      if (!isEditing) {
+        const { id } = taskBox.dataset;
+        let matchingTask;
+
+        tasks.forEach(task => {
+          if (task.id === id) {
+            matchingTask = task;
+          }
+        });
+
+        taskPopup.style.display = 'block';
+        taskPopup.innerHTML = `
+          <div class="task-card-grid">
+            <label for="task-card-title" class="title">Title</label>
+            <span class="details">${matchingTask.title}</span>
+  
+            <label for="task-card-date">Date</label>
+            <span class="details">${matchingTask.date}</span>
+  
+            <label for="task-card-time">Time</label>
+            <span class="details">${matchingTask.time}</span>
+  
+            <label for="task-card-more" class="more">More</label>
+            <span class="details">${matchingTask.more}</span>
+          </div>
+        </div>
+        `
+      }
+    }
+
+    // click to edit
+    taskBox.onclick = () => {
+      isEditing = true;
       const { id } = taskBox.dataset;
       let matchingTask;
 
@@ -672,6 +707,10 @@ function hoverToDisplay() {
 
       const taskPopup = taskBox.nextElementSibling;
       taskPopup.innerHTML = `
+        <div>
+          <span class="material-symbols-outlined">close</span>
+          <span class="material-symbols-outlined">edit_note</span>
+        <div>
         <div class="task-card-grid">
           <label for="task-card-title" class="title">Title</label>
           <span class="details">${matchingTask.title}</span>
@@ -687,8 +726,30 @@ function hoverToDisplay() {
         </div>
       </div>
       `
+
+    // add two ways to close the popup 1) click X 2) click outside
+    // 1)
+    taskPopup.querySelector('.material-symbols-outlined')
+      .onclick = () => {
+        isEditing = false;
+        taskPopup.style.display = 'none';
+      }
+    // 2) !!remember to use theField.contains(event.target)~
+    document.onclick = (event) => {
+      if (!taskPopup.contains(event.target) &&
+          !taskBox.contains(event.target)) {
+        isEditing = false;
+        taskPopup.style.display = 'none';
+      }
     }
-  })
+    }
+
+    taskBox.onmouseleave = () => {
+      if (!isEditing) {
+      taskPopup.style.display = 'none';
+      }
+    };
+  });
 }
 
 // make changing view possible by showing / hiding different section!

@@ -286,10 +286,6 @@ button {
   font-size: 14px;
 }
 
-.task:hover+.task-popup {
-  display: block;
-}
-
 .details {
   border: none;
   background-color: var(--section-color);
