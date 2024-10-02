@@ -393,7 +393,7 @@ cancelBtn.onclick = () => {
 }
 
 // get the user's input
-const tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 function getInput(status, color) {
   // here則還需要處理使用者輸入不當時的錯誤處理！
@@ -601,7 +601,7 @@ function renderTask(viewSelected) {
       })
     });
   }
-  hoverToDisplay();
+  popupTask();
 }
 
 function displayHeader(today) {
@@ -659,11 +659,11 @@ function getSunday(today) {
   return new Date(theDay.toDateString());
 }
 
-function hoverToDisplay() {
+function popupTask() {
   document.querySelectorAll('span.task').forEach(taskBox => {
     const taskPopup = taskBox.nextElementSibling;
     let isEditing = false;
-    
+
     taskBox.onmouseenter = () => {
       if (!isEditing) {
         const { id } = taskBox.dataset;
@@ -705,7 +705,7 @@ function hoverToDisplay() {
           </div>
 
           <div class="task-popup-config">
-            <span class="material-symbols-outlined">close</span>
+            <span class="material-symbols-outlined delete-task">close</span>
             <span class="material-symbols-outlined save-task">task</span>
           </div>
         `
@@ -715,7 +715,7 @@ function hoverToDisplay() {
     // click to edit
     taskBox.onclick = () => {
       isEditing = true;
-      
+
       // display the input & show the edited value on screen
       taskPopup.querySelectorAll('.details').forEach(detail => {
         // changing the color to indicate users that they are allowed to edit the task popup now!
@@ -724,7 +724,7 @@ function hoverToDisplay() {
         detail.onclick = () => {
           const textElement = detail.querySelector('.text');
           const inputField = detail.querySelector('input');
-          
+
           // Toggle visibility of text and input
           textElement.style.display = 'none';
           inputField.style.display = 'block';
@@ -745,7 +745,7 @@ function hoverToDisplay() {
 
       // save new values to tasks array when the save icon is clicked
       taskPopup.querySelector('.save-task').onclick = () => {
-        const {id} = taskBox.dataset;
+        const { id } = taskBox.dataset;
         let matchingTask = tasks.find(task => task.id === id);
         const inputs = taskPopup.querySelectorAll('input');
         const title = inputs[0].value;
@@ -762,15 +762,22 @@ function hoverToDisplay() {
         renderTask(viewSelected);
       }
 
-      // add two ways to close the popup 1) click X 2) click outside
-      // 1)
-      taskPopup.querySelector('.material-symbols-outlined')
+      // click close icon to delete tasks
+      taskPopup.querySelector('.delete-task')
         .onclick = () => {
-          isEditing = false;
-          taskPopup.style.display = 'none';
+          if (confirm('Sure to delete?')) {
+            const { id } = taskBox.dataset;
+            // filter gets the tasks array w/out the specific id!
+            tasks = tasks.filter(task => task.id !== id);
+
+            saveToStorage();
+            renderTask(viewSelected);
+          }
         }
-      // 2) !!remember to use theField.contains(event.target)~
+
+      // click outside to close the popup WITHOUT changing the tasks array
       document.addEventListener('click', (event) => {
+        //!!remember to use theField.contains(event.target)~
         if (!taskPopup.contains(event.target) &&
           !taskBox.contains(event.target)) {
           isEditing = false;
