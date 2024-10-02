@@ -368,6 +368,7 @@ function displayTaskCard() {
   document.querySelector('.overlay').classList.add('active');
 }
 function cancelTaskCard() {
+  clearInput();
   document.querySelector('.task-card').classList.remove('clicked');
   document.querySelector('.overlay').classList.remove('active');
 }
@@ -662,33 +663,51 @@ function hoverToDisplay() {
   document.querySelectorAll('span.task').forEach(taskBox => {
     const taskPopup = taskBox.nextElementSibling;
     let isEditing = false;
+    
     taskBox.onmouseenter = () => {
       if (!isEditing) {
         const { id } = taskBox.dataset;
-        let matchingTask;
+        let matchingTask = tasks.find(task => task.id === id);
+        // let matchingTask;
 
-        tasks.forEach(task => {
-          if (task.id === id) {
-            matchingTask = task;
-          }
-        });
+        // tasks.forEach(task => {
+        //   if (task.id === id) {
+        //     matchingTask = task;
+        //   }
+        // });
 
         taskPopup.style.display = 'block';
         taskPopup.innerHTML = `
           <div class="task-card-grid">
-            <label for="task-card-title" class="title">Title</label>
-            <span class="details">${matchingTask.title}</span>
+            <label class="title">Title</label>
+            <span class="details">
+              <span class="text">${matchingTask.title}</span>
+              <input value="${matchingTask.title}">
+            </span>
   
-            <label for="task-card-date">Date</label>
-            <span class="details">${matchingTask.date}</span>
+            <label>Date</label>
+            <span class="details">
+              <span class="text">${matchingTask.date}</span>
+              <input type="date" value="${matchingTask.date}">
+            </span>
+            
+            <label>Time</label>
+            <span class="details">
+              <span class="text">${matchingTask.time}</span>
+              <input type="number" value="${matchingTask.time}">
+            </span>
   
-            <label for="task-card-time">Time</label>
-            <span class="details">${matchingTask.time}</span>
-  
-            <label for="task-card-more" class="more">More</label>
-            <span class="details">${matchingTask.more}</span>
+            <label class="more">More</label>
+            <span class="details">
+              <span class="text">${matchingTask.more}</span>
+              <input value="${matchingTask.more}">
+            </span>
           </div>
-        </div>
+
+          <div class="task-popup-config">
+            <span class="material-symbols-outlined">close</span>
+            <span class="material-symbols-outlined save-task">task</span>
+          </div>
         `
       }
     }
@@ -696,57 +715,73 @@ function hoverToDisplay() {
     // click to edit
     taskBox.onclick = () => {
       isEditing = true;
-      const { id } = taskBox.dataset;
-      let matchingTask;
+      
+      // display the input & show the edited value on screen
+      taskPopup.querySelectorAll('.details').forEach(detail => {
+        // changing the color to indicate users that they are allowed to edit the task popup now!
+        detail.style.color = 'var(--text-light)';
 
-      tasks.forEach(task => {
-        if (task.id === id) {
-          matchingTask = task;
+        detail.onclick = () => {
+          const textElement = detail.querySelector('.text');
+          const inputField = detail.querySelector('input');
+          
+          // Toggle visibility of text and input
+          textElement.style.display = 'none';
+          inputField.style.display = 'block';
+
+          // Automatically focus the input field
+          inputField.focus();
+
+          // handle when the user presses Enter to save the changes
+          inputField.onblur = () => {
+            textElement.textContent = inputField.value;
+            textElement.style.display = 'block';
+            inputField.style.display = 'none';
+
+            // isEditing = false;
+          };
+        }
+      })
+
+      // save new values to tasks array when the save icon is clicked
+      taskPopup.querySelector('.save-task').onclick = () => {
+        const {id} = taskBox.dataset;
+        let matchingTask = tasks.find(task => task.id === id);
+        const inputs = taskPopup.querySelectorAll('input');
+        const title = inputs[0].value;
+        const date = inputs[1].value;
+        const time = inputs[2].value;
+        const more = inputs[3].value;
+
+        matchingTask.title = title;
+        matchingTask.date = date;
+        matchingTask.time = time;
+        matchingTask.more = more;
+
+        saveToStorage();
+        renderTask(viewSelected);
+      }
+
+      // add two ways to close the popup 1) click X 2) click outside
+      // 1)
+      taskPopup.querySelector('.material-symbols-outlined')
+        .onclick = () => {
+          isEditing = false;
+          taskPopup.style.display = 'none';
+        }
+      // 2) !!remember to use theField.contains(event.target)~
+      document.addEventListener('click', (event) => {
+        if (!taskPopup.contains(event.target) &&
+          !taskBox.contains(event.target)) {
+          isEditing = false;
+          taskPopup.style.display = 'none';
         }
       });
-
-      const taskPopup = taskBox.nextElementSibling;
-      taskPopup.innerHTML = `
-        <div>
-          <span class="material-symbols-outlined">close</span>
-          <span class="material-symbols-outlined">edit_note</span>
-        <div>
-        <div class="task-card-grid">
-          <label for="task-card-title" class="title">Title</label>
-          <span class="details">${matchingTask.title}</span>
-
-          <label for="task-card-date">Date</label>
-          <span class="details">${matchingTask.date}</span>
-
-          <label for="task-card-time">Time</label>
-          <span class="details">${matchingTask.time}</span>
-
-          <label for="task-card-more" class="more">More</label>
-          <span class="details">${matchingTask.more}</span>
-        </div>
-      </div>
-      `
-
-    // add two ways to close the popup 1) click X 2) click outside
-    // 1)
-    taskPopup.querySelector('.material-symbols-outlined')
-      .onclick = () => {
-        isEditing = false;
-        taskPopup.style.display = 'none';
-      }
-    // 2) !!remember to use theField.contains(event.target)~
-    document.onclick = (event) => {
-      if (!taskPopup.contains(event.target) &&
-          !taskBox.contains(event.target)) {
-        isEditing = false;
-        taskPopup.style.display = 'none';
-      }
-    }
     }
 
     taskBox.onmouseleave = () => {
       if (!isEditing) {
-      taskPopup.style.display = 'none';
+        taskPopup.style.display = 'none';
       }
     };
   });
