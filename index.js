@@ -664,6 +664,7 @@ function popupTask() {
     const taskPopup = taskBox.nextElementSibling;
     let isEditing = false;
 
+    // hover to see details
     taskBox.onmouseenter = () => {
       if (!isEditing) {
         const { id } = taskBox.dataset;
@@ -676,7 +677,7 @@ function popupTask() {
         //   }
         // });
 
-        taskPopup.style.display = 'block';
+        taskPopup.style.display = 'block';  // 讓popup呈現
         taskPopup.innerHTML = `
           <div class="task-card-grid">
             <label class="title">Title</label>
@@ -706,9 +707,16 @@ function popupTask() {
 
           <div class="task-popup-config">
             <span class="material-symbols-outlined delete-task">close</span>
+            <span class="material-symbols-outlined to-do">radio_button_unchecked</span>
+            <span class="material-symbols-outlined done">check_circle</span>
             <span class="material-symbols-outlined save-task">task</span>
           </div>
         `
+        if (matchingTask.status === 'done') {
+          taskPopup.querySelector('.to-do').style.display = 'none';
+        } else {
+          taskPopup.querySelector('.done').style.display = 'none';
+        }
       }
     }
 
@@ -743,15 +751,33 @@ function popupTask() {
         }
       })
 
+      // check if the "status" symbol is clicked, & show the change
+      const doneIcon = taskPopup.querySelector('.done');
+      const toDoIcon = taskPopup.querySelector('.to-do');
+      doneIcon.onclick = () => {
+        doneIcon.style.display = 'none';
+        toDoIcon.style.display = 'block';
+      };
+      toDoIcon.onclick = () => {
+        toDoIcon.style.display = 'none';
+        doneIcon.style.display = 'block';
+      }
+
       // save new values to tasks array when the save icon is clicked
       taskPopup.querySelector('.save-task').onclick = () => {
         const { id } = taskBox.dataset;
         let matchingTask = tasks.find(task => task.id === id);
+
         const inputs = taskPopup.querySelectorAll('input');
         const title = inputs[0].value;
         const date = inputs[1].value;
         const time = inputs[2].value;
         const more = inputs[3].value;
+
+        // check which status
+        const isDone = doneIcon.style.display !== 'none';
+        
+        matchingTask.status = isDone ? 'done' : '';
 
         matchingTask.title = title;
         matchingTask.date = date;
@@ -763,17 +789,16 @@ function popupTask() {
       }
 
       // click close icon to delete tasks
-      taskPopup.querySelector('.delete-task')
-        .onclick = () => {
-          if (confirm('Sure to delete?')) {
-            const { id } = taskBox.dataset;
-            // filter gets the tasks array w/out the specific id!
-            tasks = tasks.filter(task => task.id !== id);
+      taskPopup.querySelector('.delete-task').onclick = () => {
+        if (confirm('Sure to delete?')) {
+          const { id } = taskBox.dataset;
+          // filter gets the tasks array w/out the specific id!
+          tasks = tasks.filter(task => task.id !== id);
 
-            saveToStorage();
-            renderTask(viewSelected);
-          }
+          saveToStorage();
+          renderTask(viewSelected);
         }
+      }
 
       // click outside to close the popup WITHOUT changing the tasks array
       document.addEventListener('click', (event) => {

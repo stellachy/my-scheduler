@@ -301,11 +301,9 @@ button {
   font-family: "Inknut Antiqua", serif;;
 }
 
-
 .task-popup-config {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
 }
 
 .task-popup-config span:hover {
