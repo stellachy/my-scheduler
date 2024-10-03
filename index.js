@@ -386,10 +386,20 @@ displayIcon.onclick = () => {
 document.getElementById('overlay');
 overlay.onclick = () => {
   cancelTaskCard();
+
+  // reset color to red if the task-card is clicked off
+  document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
+  color = 'red';
+  document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 }
 document.getElementById('cancelBtn');
 cancelBtn.onclick = () => {
   cancelTaskCard();
+
+  // reset color to red if the task-card is clicked off
+  document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
+  color = 'red';
+  document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 }
 
 // get the user's input
@@ -403,15 +413,21 @@ function getInput(status, color) {
   let more = document.getElementById('task-card-more').value;
   const id = generateUniqueId();
 
-  tasks.push({
-    id,
-    color,
-    title,
-    date,
-    time,
-    more,
-    status
-  });
+  if (title && date) {
+    tasks.push({
+      id,
+      color,
+      title,
+      date,
+      time,
+      more,
+      status
+    });
+    return true;
+  } else {
+    alert('Please enter both title and date!');
+    return false;
+  }
 }
 
 function generateUniqueId() {
@@ -430,10 +446,13 @@ function saveToStorage() {
 }
 
 // get color after tags being clicked
-let color = '';
+let color = 'red';
+document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 document.querySelectorAll('.tag').forEach((tag) => {
   tag.onclick = () => {
+    document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
     color = tag.dataset.color;
+    tag.style.boxShadow = '0 0 0 2px var(--text-light)';
   }
 });
 
@@ -441,27 +460,25 @@ document.getElementById('doneBtn');
 doneBtn.onclick = () => {
   const status = 'done';
 
-  getInput(status, color);
+  if (getInput(status, color)) {
+    saveToStorage();
 
-  saveToStorage();
+    // display在畫面上
+    renderTask(viewSelected);
 
-  // display在畫面上
-  renderTask(viewSelected);
-
-  // 儲存在tasks之後，把畫面上的value刪掉！
-  clearInput();
+    // 儲存在tasks之後，把畫面上的value刪掉！
+    clearInput();
+  }
 }
 
 document.getElementById('addBtn');
 addBtn.onclick = () => {
   const status = '';
-  getInput(status, color);
-
-  saveToStorage();
-
-  renderTask(viewSelected);
-
-  clearInput();
+  if (getInput(status, color)) {
+    saveToStorage();
+    renderTask(viewSelected);
+    clearInput();
+  }
 }
 
 function renderTask(viewSelected) {
@@ -636,8 +653,6 @@ function displayHeader(today) {
   }
 }
 
-console.log(tasks);
-
 function getMonday(today) {
   const theDay = new Date(today);
   const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
@@ -776,7 +791,7 @@ function popupTask() {
 
         // check which status
         const isDone = doneIcon.style.display !== 'none';
-        
+
         matchingTask.status = isDone ? 'done' : '';
 
         matchingTask.title = title;
@@ -858,4 +873,6 @@ renderTask(viewSelected);
 
 displayHeader(today);
 
+// the following is for testing.
+// console.log(tasks);
 // localStorage.clear();
