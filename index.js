@@ -159,8 +159,9 @@ function calendarChange() {
       changeDate(displayToday);
 
       // for marking the specifically selected day
-      cellElem.forEach(cell => cell.style.border = 'none');
-      td.style.border = '2px solid var(--text-light)';
+      cellElem.forEach(cell => cell.style.boxShadow = 'none');
+      td.style.boxShadow = '0 0 5px var(--text-light)';
+      td.style.transition = 'box-shadow 0.3s ease';
     }
   });
 }
