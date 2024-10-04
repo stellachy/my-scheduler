@@ -253,11 +253,11 @@ function generateMonth(today, daysInMonth, firstDayOfMonth) {
               </div>
             </div>
           `;
-
-    // newCell.onclick = function () {
-    //   console.log(newCell);
-    // };
-
+    if (day === new Date().getDate()) {
+      newCell.querySelector('.month-view-day-header').style.backgroundColor = 'var(--tag-red)';
+      newCell.querySelector('.month-view-day-header').style.boxShadow = '0 0 5px var(--text-light)';
+    }
+    
     weekDayOfMonth++;
   }
 }
@@ -436,10 +436,8 @@ function generateUniqueId() {
 }
 
 function clearInput() {
-  document.getElementById('task-card-title').value = '';
-  document.getElementById('task-card-date').value = '';
-  document.getElementById('task-card-time').value = '';
-  document.getElementById('task-card-more').value = '';
+  document.getElementById('taskCard');
+  taskCard.reset();
 }
 
 function saveToStorage() {

@@ -668,6 +668,18 @@ button {
   overflow: auto;
 }
 
+.month-view-day-header {
+  margin-top: 6px;
+  height: 25px;
+  width: 20px;
+  vertical-align: top; 
+ 
+  line-height: 1.25;
+  border-radius: 50%;
+  padding-left: 5px;
+  vertical-align: center;
+}
+
 /* this following is for to-do-section of both month-&year- view */
 .to-do-section.smaller-size {
   height: 120px;
