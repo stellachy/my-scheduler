@@ -15,7 +15,7 @@
   <header>
     <div class="header-container">
       <span class="material-symbols-outlined header-menu-icon">menu</span>
-      <span class="header-title">My Secheduler</span>
+      <span class="header-title">My Scheduler</span>
       <!-- goes back to the original one! -->
       <span class="header-view-changer">
         <select name="change-view" id="view-selector">
@@ -25,18 +25,45 @@
           <option value="year-view">Year</option>
         </select>
       </span>
-      <span class="header-view-detail">
-        <span class="header-view-day"></span> |
+      <span id="dateChanger" class="header-view-detail">
+        <span class="header-view-day"></span>
         <span class="header-view-date"></span>
       </span>
 
-      <button class="header-today">today</button>
-      <button class="header-prev">
-        <span class="material-symbols-outlined">chevron_backward</span>
-      </button>
-      <button class="header-next">
-        <span class="material-symbols-outlined">chevron_forward</span>
-      </button>
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <span id="monthYear"></span>
+          <div>
+            <button id="prevMonth" class="nav-btn">◀</button>
+            <button id="nextMonth" class="nav-btn">▶</button>
+          </div>
+        </div>
+
+        <table class="calendar">
+          <thead>
+            <tr>
+              <th>M</th>
+              <th>T</th>
+              <th>W</th>
+              <th>T</th>
+              <th>F</th>
+              <th>S</th>
+              <th>S</th>
+            </tr>
+          </thead>
+          <tbody id="calendarBody"></tbody>
+        </table>
+      </div>
+
+      <div class="btn-container">
+        <button id="todayBtn" class="header-today">today</button>
+        <button id="prevBtn" class="header-prev">
+          <span class="material-symbols-outlined">chevron_backward</span>
+        </button>
+        <button id="nextBtn" class="header-next">
+          <span class="material-symbols-outlined">chevron_forward</span>
+        </button>
+      </div>
     </div>
   </header>
   <main>
@@ -46,14 +73,10 @@
 
       <div class="to-do-header" id="displayText">
         <div class="to-do-header-text">To dos</div>
-        <!-- <span class="to-do-header-icon">+</span> -->
-        <span class="material-symbols-outlined to-do-header-icon"
-              id="displayIcon"
-        >add_circle</span>
+        <span class="material-symbols-outlined to-do-header-icon" id="displayIcon">add_circle</span>
       </div>
 
       <div class="task-card">
-        <!-- <div class="color-mark">⦿</div> -->
         <div class="color-tag-container">
           <button class="tag tag-red" data-color="red"></button>
           <button class="tag tag-yellow" data-color="yellow"></button>
@@ -63,19 +86,21 @@
           <button class="tag tag-purple" data-color="purple"></button>
         </div>
 
+        <form id="taskCard">
         <div class="task-card-grid">
-          <label for="task-card-title" class="title">Title</label>
-          <textarea type="text" id="task-card-title"></textarea>
-
-          <label for="task-card-date">Date</label>
-          <input id="task-card-date" type="date">
-
-          <label for="task-card-time">Time</label>
-          <input id="task-card-time" type="number" placeholder="hrs">
-
-          <label for="task-card-more" class="more">More</label>
-          <textarea id="task-card-more" type="textarea"></textarea>
+            <label for="task-card-title" class="title">Title</label>
+            <textarea type="text" id="task-card-title"></textarea>
+  
+            <label for="task-card-date">Date</label>
+            <input id="task-card-date" type="date">
+  
+            <label for="task-card-time">Time</label>
+            <input id="task-card-time" type="number" placeholder="hrs">
+  
+            <label for="task-card-more" class="more">More</label>
+            <textarea id="task-card-more" type="textarea"></textarea>
         </div>
+        </form>
 
         <div class="status-mark">
           <span class="status-done" id="doneBtn">Done</span>
@@ -84,16 +109,6 @@
         </div>
       </div>
       <div class="to-do-content" id="toDoContent">
-        <!-- <span class="task red">watch Netflix</span>
-        <span class="task red">watch Netflix</span>
-        <span class="task orange">do something else</span><span class="task yellow">watch yt</span>
-        <span class="task red">watch Netflix</span>
-        <span class="task red">watch Netflix</span>
-        <span class="task red">watch Netflix</span>
-        <span class="task yellow">watch yt</span>
-        <span class="task yellow">watch yt</span> -->
-
-        <!-- the above is for checking the overflow situation! -->
       </div>
     </section>
 
@@ -104,8 +119,6 @@
             <span class="material-symbols-outlined">wb_sunny</span>
           </div>
           <div class="done-content">
-            <!-- <span class="task done red">personal</span>
-            <span class="task done orange">relationship</span> -->
           </div>
         </div>
 
@@ -114,12 +127,6 @@
             <span class="material-symbols-outlined">lunch_dining</span>
           </div>
           <div class="done-content">
-            <!-- <span class="task done green">another tasks</span>
-            <span class="task done purple">another tasks</span>
-            <span class="task done purple">another tasks</span>
-            <span class="task done blue">another tasks</span>
-            <span class="task done red">another tasks</span>
-            <span class="task done red">another tasks</span> -->
           </div>
         </div>
 
@@ -128,10 +135,6 @@
             <span class="material-symbols-outlined">nights_stay</span>
           </div>
           <div class="done-content">
-            <!-- <span class="task done red">task sample again</span>
-            <span class="task done orange">task sample again</span>
-            <span class="task done yellow">task sample again</span>
-            <span class="task done green">task sample again</span> -->
           </div>
         </div>
       </div>
