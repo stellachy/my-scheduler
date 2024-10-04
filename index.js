@@ -617,6 +617,8 @@ function renderTask(viewSelected) {
       })
     });
   }
+
+  adjustTaskHeight();
   popupTask();
 }
 
@@ -671,6 +673,17 @@ function getSunday(today) {
   theDay.setHours(24 * (7 - day));
 
   return new Date(theDay.toDateString());
+}
+
+function adjustTaskHeight() {
+  document.querySelectorAll('span.task').forEach(taskBox => {
+    const baseHeight = 35;
+    const id = taskBox.dataset.id;
+    const matchingTask = tasks.find(task => task.id === id)
+    const hours = matchingTask.time;
+
+    taskBox.style.height = `${baseHeight * hours}px`
+  })
 }
 
 function popupTask() {
