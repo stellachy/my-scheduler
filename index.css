@@ -29,6 +29,12 @@ body {
   color: var(--text-color);
 }
 
+/* related to dragTask() */
+  /* making the done-content box big enogh to accept dropping! */
+.done-content {
+  min-height: 100px;
+}
+
 /* 調整header的fixed on the top */
 header {
   position: fixed;

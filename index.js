@@ -257,7 +257,7 @@ function generateMonth(today, daysInMonth, firstDayOfMonth) {
       newCell.querySelector('.month-view-day-header').style.backgroundColor = 'var(--tag-red)';
       newCell.querySelector('.month-view-day-header').style.boxShadow = '0 0 5px var(--text-light)';
     }
-    
+
     weekDayOfMonth++;
   }
 }
@@ -488,9 +488,11 @@ function renderTask(viewSelected) {
   }
 
   document.querySelectorAll(`.${viewSelected} .done-content`).forEach((done) => {
+    done.setAttribute('data-status', 'done');
     done.innerHTML = ''; // Clear the content, cuz i'll use "+=" for the following
   });
   document.getElementById('toDoContent').innerHTML = '';
+  document.getElementById('toDoContent').setAttribute('data-status', '');
 
   if (viewSelected === 'day-view') {
     // get the doneContentDate for today
@@ -618,8 +620,13 @@ function renderTask(viewSelected) {
     });
   }
 
-  adjustTaskHeight();
+  if (viewSelected === 'day-view' || viewSelected === 'week-view') {
+    adjustTaskHeight();
+  }
+
   popupTask();
+
+  dragTask();
 }
 
 function displayHeader(today) {
@@ -675,8 +682,54 @@ function getSunday(today) {
   return new Date(theDay.toDateString());
 }
 
-function adjustTaskHeight() {
+function dragTask() {
   document.querySelectorAll('span.task').forEach(taskBox => {
+    taskBox.setAttribute('draggable', 'true');
+    taskBox.ondragstart = (event) => {
+      event.dataTransfer.setData('text/plain', taskBox.dataset.id);
+    };
+  });
+
+  document.querySelectorAll(`.${viewSelected} .done-content`).forEach(container => {
+    container.ondragover = (event) => event.preventDefault(); // Allow dropping
+    container.ondrop = (event) => {
+      event.preventDefault();
+      let taskId = event.dataTransfer.getData('text/plain');
+      // let taskElement = document.querySelector(`[data-id="${taskId}"]`);
+
+      // make sure the new date conform to the <input> element!
+      const containerDate = new Date(container.dataset.date);
+      const year = containerDate.getFullYear();
+      const month = ('0' + (containerDate.getMonth() + 1)).slice(-2);
+      const date = ('0' + containerDate.getDate()).slice(-2);
+      const dateString = `${year}-${month}-${date}`;
+
+      // Update task's properties (status, date, etc.) depending on the container
+      updateTask(taskId, container.dataset.status, dateString);
+    };
+  });
+
+  const toDoContainer = document.getElementById('toDoContent');
+  toDoContainer.ondragover = (event) => event.preventDefault();
+  toDoContainer.ondrop = (event) => {
+    event.preventDefault();
+    const taskId = event.dataTransfer.getData('text/plain');
+
+    updateTask(taskId, toDoContainer.dataset.status, 0)
+  }
+
+  function updateTask(taskId, newStatus, newDate) {
+    let task = tasks.find(task => task.id === taskId);
+    task.status = newStatus;
+    task.date = newDate ? newDate : task.date;
+
+    saveToStorage();
+    renderTask(viewSelected);
+  }
+}
+
+function adjustTaskHeight() {
+  document.querySelectorAll('.done-content span.task').forEach(taskBox => {
     const baseHeight = 35;
     const id = taskBox.dataset.id;
     const matchingTask = tasks.find(task => task.id === id)
