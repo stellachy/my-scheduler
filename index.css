@@ -32,7 +32,7 @@ body {
 /* related to dragTask() */
   /* making the done-content box big enogh to accept dropping! */
 .done-content {
-  min-height: 100px;
+  min-height: 350px;
 }
 
 /* 調整header的fixed on the top */

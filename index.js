@@ -623,10 +623,10 @@ function renderTask(viewSelected) {
   if (viewSelected === 'day-view' || viewSelected === 'week-view') {
     adjustTaskHeight();
   }
+  
+  dragTask();
 
   popupTask();
-
-  dragTask();
 }
 
 function displayHeader(today) {
@@ -687,6 +687,15 @@ function dragTask() {
     taskBox.setAttribute('draggable', 'true');
     taskBox.ondragstart = (event) => {
       event.dataTransfer.setData('text/plain', taskBox.dataset.id);
+
+      // Create a custom image for the drag
+      const dragImage = document.createElement('div');
+      dragImage.style.width = '100px';
+      dragImage.style.height = '50px';
+      dragImage.style.background = 'transparent';
+      document.body.appendChild(dragImage);
+
+      event.dataTransfer.setDragImage(dragImage, 0, 0);
     };
   });
 
@@ -746,57 +755,58 @@ function popupTask() {
 
     // hover to see details
     taskBox.onmouseenter = () => {
-      if (!isEditing) {
-        const { id } = taskBox.dataset;
-        let matchingTask = tasks.find(task => task.id === id);
-        // let matchingTask;
+      if (isEditing) {
+        return;
+      }
+      const { id } = taskBox.dataset;
+      let matchingTask = tasks.find(task => task.id === id);
+      // let matchingTask;
 
-        // tasks.forEach(task => {
-        //   if (task.id === id) {
-        //     matchingTask = task;
-        //   }
-        // });
+      // tasks.forEach(task => {
+      //   if (task.id === id) {
+      //     matchingTask = task;
+      //   }
+      // });
 
-        taskPopup.style.display = 'block';  // 讓popup呈現
-        taskPopup.innerHTML = `
-          <div class="task-card-grid">
-            <label class="title">Title</label>
-            <span class="details">
-              <span class="text">${matchingTask.title}</span>
-              <input value="${matchingTask.title}">
-            </span>
-  
-            <label>Date</label>
-            <span class="details">
-              <span class="text">${matchingTask.date}</span>
-              <input type="date" value="${matchingTask.date}">
-            </span>
-            
-            <label>Time</label>
-            <span class="details">
-              <span class="text">${matchingTask.time}</span>
-              <input type="number" value="${matchingTask.time}">
-            </span>
-  
-            <label class="more">More</label>
-            <span class="details">
-              <span class="text">${matchingTask.more}</span>
-              <input value="${matchingTask.more}">
-            </span>
-          </div>
+      taskPopup.style.display = 'block';  // 讓popup呈現
+      taskPopup.innerHTML = `
+        <div class="task-card-grid">
+          <label class="title">Title</label>
+          <span class="details">
+            <span class="text">${matchingTask.title}</span>
+            <input value="${matchingTask.title}">
+          </span>
 
-          <div class="task-popup-config">
-            <span class="material-symbols-outlined delete-task">close</span>
-            <span class="material-symbols-outlined to-do">radio_button_unchecked</span>
-            <span class="material-symbols-outlined done">check_circle</span>
-            <span class="material-symbols-outlined save-task">task</span>
-          </div>
-        `
-        if (matchingTask.status === 'done') {
-          taskPopup.querySelector('.to-do').style.display = 'none';
-        } else {
-          taskPopup.querySelector('.done').style.display = 'none';
-        }
+          <label>Date</label>
+          <span class="details">
+            <span class="text">${matchingTask.date}</span>
+            <input type="date" value="${matchingTask.date}">
+          </span>
+          
+          <label>Time</label>
+          <span class="details">
+            <span class="text">${matchingTask.time}</span>
+            <input type="number" value="${matchingTask.time}">
+          </span>
+
+          <label class="more">More</label>
+          <span class="details">
+            <span class="text">${matchingTask.more}</span>
+            <input value="${matchingTask.more}">
+          </span>
+        </div>
+
+        <div class="task-popup-config">
+          <span class="material-symbols-outlined delete-task">close</span>
+          <span class="material-symbols-outlined to-do">radio_button_unchecked</span>
+          <span class="material-symbols-outlined done">check_circle</span>
+          <span class="material-symbols-outlined save-task">task</span>
+        </div>
+      `
+      if (matchingTask.status === 'done') {
+        taskPopup.querySelector('.to-do').style.display = 'none';
+      } else {
+        taskPopup.querySelector('.done').style.display = 'none';
       }
     }
 
