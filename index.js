@@ -169,10 +169,20 @@ calendarChange();
 
 // add date to the done-content in the day-view
 function addDate(today) {
+  // setting different time for each block
+  document.querySelectorAll('.day-view .done-content')[0]
+    .setAttribute('data-date', `${new Date(today.setHours(4, 0, 0))}`)
+
+  document.querySelectorAll('.day-view .done-content')[1]
+    .setAttribute('data-date', `${new Date(today.setHours(12, 0, 0))}`)
+
+  document.querySelectorAll('.day-view .done-content')[2]
+    .setAttribute('data-date', `${new Date(today.setHours(18, 0, 0))}`)
+
   // setting three blocks having the same date attibute
-  document.querySelectorAll('.day-view .done-content').forEach((doneContentElem) => {
-    doneContentElem.setAttribute('data-date', `${today}`)
-  });
+  // document.querySelectorAll('.day-view .done-content').forEach((doneContentElem) => {
+  //   doneContentElem.setAttribute('data-date', `${today}`)
+  // });
 }
 addDate(today);
 
@@ -518,29 +528,41 @@ function renderTask(viewSelected) {
 
   if (viewSelected === 'day-view') {
     // get the doneContentDate for today
-    const doneContentElem = document.querySelector('.day-view .done-content')
-    const doneContentDate = new Date(doneContentElem.dataset.date)
+    const dayDates = [];
+    document.querySelectorAll('.day-view .done-content')
+      .forEach((done) => {
+        const { date } = done.dataset;
+        dayDates.push(new Date(date));
+      });
+
     tasks.forEach((task) => {
       const taskDate = new Date(task.date);
 
-      if (isSameDate(taskDate, doneContentDate)) {
+      if (isSameDate(taskDate, dayDates[0])) {
         // 是的話再做下面這些事情
         if (task.status) {
-          document.querySelectorAll('.day-view .done-content')[0]
+          // checking time matches the box
+          let i = 0;
+          if (task.time.split(':').map(Number)[0] >= dayDates[2].getHours()) {
+            i = 2;
+          } else if (task.time.split(':').map(Number)[0] >= dayDates[1].getHours()) {
+            i = 1;
+          }
+          document.querySelectorAll('.day-view .done-content')[i]
             .innerHTML += `<span 
-              class="task ${task.color} ${task.status}"
-              data-id="${task.id}"
-              >${task.title}</span>
-              <div class="task-popup"></div>
-            `;
+                  class="task ${task.color} ${task.status}"
+                  data-id="${task.id}"
+                  >${task.title}</span>
+                  <div class="task-popup"></div>
+                `;
         } else {
           document.getElementById('toDoContent')
             .innerHTML += `<span      
-              class="task ${task.color}"
-              data-id="${task.id}"
-              >${task.title}</span>
-              <div class="task-popup"></div>
-            `;
+                class="task ${task.color}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
         }
       }
     });
@@ -645,7 +667,7 @@ function renderTask(viewSelected) {
   if (viewSelected === 'day-view' || viewSelected === 'week-view') {
     adjustTaskHeight();
   }
-  
+
   dragTask();
 
   popupTask();
