@@ -375,6 +375,36 @@ function getYearDates(today) {
 }
 
 // button functions
+// related to log-in card
+function displaySideBar() {
+  menuIcon.style.display = 'none';
+  document.querySelector('header').style.paddingLeft = '230px';
+  document.querySelector('main').style.paddingLeft = '230px';
+  document.querySelector('.calendar-container').style.left = '550px';
+  document.querySelector('.side-container').style.display = 'block';
+}
+
+function cancelSideBar() {
+  menuIcon.style.display = 'block';
+  document.querySelector('header').style.paddingLeft = '0';
+  document.querySelector('main').style.paddingLeft = '0';
+  document.querySelector('.calendar-container').style.left = '320px';
+  document.querySelector('.side-container').style.display = 'none';
+}
+
+document.getElementById('menuIcon');
+menuIcon.onclick = () => {
+  displaySideBar();
+};
+
+document.onclick = (event) => {
+  const sideBarElem = document.querySelector('.side-container')
+
+  if (!sideBarElem.contains(event.target) && !menuIcon.contains(event.target)) {
+    cancelSideBar();
+  }
+}
+
 // related to displaying task card
 function displayTaskCard() {
   document.querySelector('.task-card').classList.add('clicked');

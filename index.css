@@ -47,6 +47,36 @@ main {
   padding-top: 48px;
 }
 
+.side-container {
+  background-color: var(--button-color);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 901;
+  width: 230px;
+  height: 100%;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  display: none;
+}
+.side-header {
+  display: flex;
+  align-items: center;
+
+  box-shadow: 0 5px 10px -5px var(--text-color);
+  box-sizing: border-box;
+}
+
+.side-item {
+  padding: 6px;
+  padding-left: 10px;
+}
+
+.header-user-icon {
+  font-size: 24px;
+  margin-right: 6px;
+}
+
 .header-container {
   /* the following two lines help icon align w/ the text! */
   display: flex;
@@ -60,11 +90,16 @@ main {
 .header-menu-icon {
   font-size: 26px;
   padding-left: 6px;
-  padding-right: 10px;
+  padding-right: 6px;
+}
+
+.header-menu-icon:hover {
+  cursor: pointer;
+  color: var(--text-light);
 }
 
 .header-title {
-  margin-right: 6px;
+  margin: 0 6px;
 }
 
 .header-view-detail,
@@ -84,8 +119,9 @@ main {
   left: 320px;
 
   width: 210px;
-  background-color: var(--button-color);
+  background-color: var(--section-color);
   border-radius: 6px;
+  box-shadow: 0 5px 10px -5px var(--text-color);
   overflow: hidden;
 }
 

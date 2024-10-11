@@ -12,9 +12,47 @@
 </head>
 
 <body>
+  <div class="side-container">
+    <div class="side-item side-header">
+      <span class="material-symbols-outlined header-user-icon">
+        badge
+      </span>
+      <span class="header">stella</span>
+    </div>
+    <div class="side-item">
+      here, section 1
+    </div>
+    <div class="side-item">
+      <!-- <div class="calendar-container">
+        <div class="calendar-header">
+          <span id="monthYear"></span>
+          <div>
+            <button id="prevMonth" class="nav-btn">◀</button>
+            <button id="nextMonth" class="nav-btn">▶</button>
+          </div>
+        </div>
+
+        <table class="calendar">
+          <thead>
+            <tr>
+              <th>M</th>
+              <th>T</th>
+              <th>W</th>
+              <th>T</th>
+              <th>F</th>
+              <th>S</th>
+              <th>S</th>
+            </tr>
+          </thead>
+          <tbody id="calendarBody"></tbody>
+        </table>
+      </div> -->
+      section 2
+    </div>
+  </div>
   <header>
     <div class="header-container">
-      <span class="material-symbols-outlined header-menu-icon">menu</span>
+      <span class="material-symbols-outlined header-menu-icon" id="menuIcon">menu</span>
       <span class="header-title">My Scheduler</span>
       <!-- goes back to the original one! -->
       <span class="header-view-changer">
@@ -87,10 +125,10 @@
         </div>
 
         <form id="taskCard">
-        <div class="task-card-grid">
+          <div class="task-card-grid">
             <label for="task-card-title" class="title">Title</label>
             <textarea type="text" id="task-card-title"></textarea>
-  
+
             <label for="task-card-date">Date</label>
             <input id="task-card-date" type="date">
 
@@ -99,10 +137,10 @@
 
             <label for="task-card-hour">Hour</label>
             <input id="task-card-hour" type="number" placeholder="hrs">
-  
+
             <label for="task-card-more" class="more">More</label>
             <textarea id="task-card-more" type="textarea"></textarea>
-        </div>
+          </div>
         </form>
 
         <div class="status-mark">
