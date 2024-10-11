@@ -169,8 +169,10 @@ calendarChange();
 
 // add date to the done-content in the day-view
 function addDate(today) {
-  const doneContentElem = document.querySelector('.day-view .done-content')
-  doneContentElem.setAttribute('data-date', `${today}`)
+  // setting three blocks having the same date attibute
+  document.querySelectorAll('.day-view .done-content').forEach((doneContentElem) => {
+    doneContentElem.setAttribute('data-date', `${today}`)
+  });
 }
 addDate(today);
 
@@ -411,6 +413,7 @@ function getInput(status, color) {
   let title = document.getElementById('task-card-title').value;
   let date = document.getElementById('task-card-date').value;
   let time = document.getElementById('task-card-time').value;
+  let hour = document.getElementById('task-card-hour').value;
   let more = document.getElementById('task-card-more').value;
   const id = generateUniqueId();
 
@@ -421,6 +424,7 @@ function getInput(status, color) {
       title,
       date,
       time,
+      hour,
       more,
       status
     });
@@ -429,6 +433,22 @@ function getInput(status, color) {
     alert('Please enter both title and date!');
     return false;
   }
+}
+
+function sortTasks() {
+  tasks.sort((a, b) => {
+    const [hourA, minuteA] = a.time.split(':').map(Number);
+    const [hourB, minuteB] = b.time.split(':').map(Number);
+
+    const dateTimeA = new Date(a.date);
+    dateTimeA.setHours(hourA, minuteA);
+
+    const dateTimeB = new Date(b.date);
+    dateTimeB.setHours(hourB, minuteB);
+
+    // comparing date & time together
+    return dateTimeA - dateTimeB;
+  })
 }
 
 function generateUniqueId() {
@@ -486,6 +506,8 @@ function renderTask(viewSelected) {
       taskDate.getMonth() === contentDate.getMonth() &&
       taskDate.getDate() === contentDate.getDate();
   }
+  // everytime before render, let's sort the current tasks to make sure they would be in the correct order.
+  sortTasks();
 
   document.querySelectorAll(`.${viewSelected} .done-content`).forEach((done) => {
     done.setAttribute('data-status', 'done');
@@ -742,7 +764,7 @@ function adjustTaskHeight() {
     const baseHeight = 35;
     const id = taskBox.dataset.id;
     const matchingTask = tasks.find(task => task.id === id)
-    const hours = matchingTask.time;
+    const hours = matchingTask.hour;
 
     taskBox.style.height = `${baseHeight * hours}px`
   })
@@ -782,11 +804,17 @@ function popupTask() {
             <span class="text">${matchingTask.date}</span>
             <input type="date" value="${matchingTask.date}">
           </span>
-          
+
           <label>Time</label>
           <span class="details">
             <span class="text">${matchingTask.time}</span>
-            <input type="number" value="${matchingTask.time}">
+            <input type="time" value="${matchingTask.time}">
+          </span>
+          
+          <label>Hour</label>
+          <span class="details">
+            <span class="text">${matchingTask.hour}</span>
+            <input type="number" value="${matchingTask.hour}">
           </span>
 
           <label class="more">More</label>
@@ -862,7 +890,8 @@ function popupTask() {
         const title = inputs[0].value;
         const date = inputs[1].value;
         const time = inputs[2].value;
-        const more = inputs[3].value;
+        const hour = inputs[3].value;
+        const more = inputs[4].value;
 
         // check which status
         const isDone = doneIcon.style.display !== 'none';
@@ -872,6 +901,7 @@ function popupTask() {
         matchingTask.title = title;
         matchingTask.date = date;
         matchingTask.time = time;
+        matchingTask.hour = hour;
         matchingTask.more = more;
 
         saveToStorage();
@@ -949,5 +979,5 @@ renderTask(viewSelected);
 displayHeader(today);
 
 // the following is for testing.
-// console.log(tasks);
+console.log(tasks);
 // localStorage.clear();
