@@ -844,7 +844,7 @@ function popupTask() {
       //   }
       // });
 
-      taskPopup.style.display = 'block';  // 讓popup呈現
+      taskPopup.style.left = '0px';  // 讓popup呈現
       taskPopup.innerHTML = `
         <div class="task-card-grid">
           <label class="title">Title</label>
@@ -980,14 +980,14 @@ function popupTask() {
         if (!taskPopup.contains(event.target) &&
           !taskBox.contains(event.target)) {
           isEditing = false;
-          taskPopup.style.display = 'none';
+          taskPopup.style.left = '-300px';
         }
       });
     }
 
     taskBox.onmouseleave = () => {
       if (!isEditing) {
-        taskPopup.style.display = 'none';
+        taskPopup.style.left = '-300px';
       }
     };
   });

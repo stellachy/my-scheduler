@@ -383,12 +383,12 @@ button {
 
 /* for displaying the pop-up detailed info */
 .task-popup {
-  display: none;
   z-index: 1000;
 
   position: fixed;
   top: 25%;
-  left: 0px;
+  left: -300px;
+  transition: left 0.3s ease-in-out;
 
   background-color: var(--button-color);
   width: 280px;
