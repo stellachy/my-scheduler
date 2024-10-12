@@ -44,7 +44,7 @@ nextBtn.onclick = () => {
   changeDate(displayToday);
 };
 
-// move the mouse insied the box to make the lil calendar appear
+// move the mouse inside the box to make the lil calendar appear
 document.getElementById('dateChanger');
 const calendarContainer = document.querySelector('.calendar-container');
 dateChanger.onmousemove = () => {
@@ -381,7 +381,7 @@ function displaySideBar() {
   document.querySelector('header').style.paddingLeft = '230px';
   document.querySelector('main').style.paddingLeft = '230px';
   document.querySelector('.calendar-container').style.left = '550px';
-  document.querySelector('.side-container').style.display = 'block';
+  document.querySelector('.side-container').style.left = '0';
 }
 
 function cancelSideBar() {
@@ -389,7 +389,7 @@ function cancelSideBar() {
   document.querySelector('header').style.paddingLeft = '0';
   document.querySelector('main').style.paddingLeft = '0';
   document.querySelector('.calendar-container').style.left = '320px';
-  document.querySelector('.side-container').style.display = 'none';
+  document.querySelector('.side-container').style.left = '-230px';
 }
 
 document.getElementById('menuIcon');

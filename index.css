@@ -51,17 +51,19 @@ main {
   background-color: var(--button-color);
   position: fixed;
   top: 0;
-  left: 0;
+  left: -230px;
+  transition: left 0.3s ease-in-out;
+
   z-index: 901;
   width: 230px;
   height: 100%;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
-  display: none;
 }
 .side-header {
   display: flex;
   align-items: center;
+  vertical-align: center;
 
   box-shadow: 0 5px 10px -5px var(--text-color);
   box-sizing: border-box;
@@ -72,9 +74,15 @@ main {
   padding-left: 10px;
 }
 
-.header-user-icon {
-  font-size: 24px;
+.side-user-icon {
+  font-size: 25px;
   margin-right: 6px;
+}
+
+header,
+main,
+.calendar-container {
+  transition: padding-left 0.3s ease-in-out;
 }
 
 .header-container {
