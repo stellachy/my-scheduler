@@ -409,12 +409,12 @@ document.onclick = (event) => {
 
 // related to displaying task card
 function displayTaskCard() {
-  document.querySelector('.task-card').classList.add('clicked');
+  document.querySelector('.task-card').classList.add('visible');
   document.querySelector('.overlay').classList.add('active');
 }
 function cancelTaskCard() {
   clearInput();
-  document.querySelector('.task-card').classList.remove('clicked');
+  document.querySelector('.task-card').classList.remove('visible');
   document.querySelector('.overlay').classList.remove('active');
 }
 

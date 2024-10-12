@@ -345,17 +345,26 @@ button {
   backdrop-filter: blur(5px);
 
   z-index: 100;
-  display: none;
+  /* display: none; */
+  opacity: 0;
+  transform: translateZ(-10);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 }
 
 .overlay.active {
-  display: block;
+  opacity: 1;
+  transform: translateZ(0);
+  pointer-events: auto;
 }
 
 .task-card {
-  display: none;
-  z-index: 101;
+  opacity: 0;
+  transform: translateZ(-10);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
 
+  z-index: 101;
   position: absolute;
   top: 10px;
   left: 84px;
@@ -366,9 +375,10 @@ button {
   padding: 5px 10px;
   font-size: 14px;
 }
-
-.task-card.clicked{
-  display: block;
+.task-card.visible {
+  opacity: 1;
+  transform: translateZ(0);
+  pointer-events: auto;
 }
 
 /* for displaying the pop-up detailed info */
@@ -378,13 +388,16 @@ button {
 
   position: fixed;
   top: 25%;
-  left: 10px;
+  left: 0px;
 
   background-color: var(--button-color);
   width: 280px;
   border-radius: 10px;
   padding: 5px 10px;
   font-size: 14px;
+}
+.task-popup.visible {
+
 }
 
 .task-popup input {
