@@ -48,7 +48,7 @@ nextBtn.onclick = () => {
 document.getElementById('dateChanger');
 const calendarContainer = document.querySelector('.calendar-container');
 dateChanger.onmousemove = () => {
-  calendarContainer.style.display = 'block';
+  calendarContainer.classList.add('visible');
 }
 
 // move mouse outside of the container to make it disappear
@@ -56,7 +56,7 @@ document.onmouseover = (event) => {
   // check if the click is outside the calendarContainer and dateChanger
   if (!calendarContainer.contains(event.target) &&
     !dateChanger.contains(event.target)) {
-    calendarContainer.style.display = 'none';
+    calendarContainer.classList.remove('visible');
     isClicked = true;
   }
 }
@@ -381,6 +381,7 @@ function displaySideBar() {
   document.querySelector('header').style.paddingLeft = '230px';
   document.querySelector('main').style.paddingLeft = '230px';
   document.querySelector('.calendar-container').style.left = '550px';
+  document.querySelector('.btn-container').style.right = '240px';
   document.querySelector('.side-container').style.left = '0';
 }
 
@@ -389,6 +390,7 @@ function cancelSideBar() {
   document.querySelector('header').style.paddingLeft = '0';
   document.querySelector('main').style.paddingLeft = '0';
   document.querySelector('.calendar-container').style.left = '320px';
+  document.querySelector('.btn-container').style.right = '10px';
   document.querySelector('.side-container').style.left = '-230px';
 }
 

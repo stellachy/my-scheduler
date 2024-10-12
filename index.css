@@ -80,8 +80,7 @@ main {
 }
 
 header,
-main,
-.calendar-container {
+main {
   transition: padding-left 0.3s ease-in-out;
 }
 
@@ -121,7 +120,11 @@ main,
 }
 
 .calendar-container {
-  display: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+
   position: fixed;
   top: 40px;
   left: 320px;
@@ -131,6 +134,11 @@ main,
   border-radius: 6px;
   box-shadow: 0 5px 10px -5px var(--text-color);
   overflow: hidden;
+}
+.calendar-container.visible{
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .calendar-header {
@@ -203,6 +211,8 @@ select {
   text-align: center;
   color: var(--text-color);
   appearance: none;
+
+  transition: background-color 0.3s ease-in, transform 0.3s ease-out;
 }
 
 select:focus {
@@ -213,6 +223,7 @@ select:focus {
 
 select:hover {
   background-color: var(--section-color);
+  transform: scale(1.01);
   cursor: pointer;
 }
 
@@ -228,8 +239,7 @@ button {
   align-items: center;
   position: absolute;
   right: 10px;
-  /* padding-left: 6px;
-  padding: 6px 0px; */
+  transition: right 0.32s ease-in-out;
 }
 
 .header-today {
