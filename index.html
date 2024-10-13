@@ -14,11 +14,34 @@
 <body>
   <div class="side-container">
     <div class="side-item side-header">
-      <span class="material-symbols-outlined side-user-icon">
+      <span class="material-symbols-outlined side-user-icon member">
         badge
       </span>
-      <span class="header">Guest</span>
+      <span class="material-symbols-outlined side-user-icon guest">
+        account_circle
+      </span>
+      <span class="side-text">Guest</span>
     </div>
+    <div class="overlay" id="logInOverlay">
+    </div>
+    <div class="side-login-container">
+      <div class="login-header">Login</div>
+      <div>
+        <input type="text" placeholder="Email">
+      </div>
+      <div>
+        <input type="password" placeholder="Password">        
+      </div>
+      <div class="login-forget">Forget password?</div>
+      <button>Login</button>
+      <div class="login-signup">Not a member? 
+        <span>Sign Up</span>
+      </div>
+      <span id="loginCancel" class="material-symbols-outlined login-cancel">
+        cancel
+      </span>
+    </div>
+
     <div class="side-item">
       here, section 1
     </div>

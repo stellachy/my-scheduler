@@ -407,15 +407,32 @@ document.onclick = (event) => {
   }
 }
 
+function popupLogIn() {
+  document.getElementById('logInOverlay').classList.add('active');
+  document.querySelector('.side-login-container').classList.add('visible');
+}
+function cancelLogIn() {
+  document.getElementById('logInOverlay').classList.remove('active');
+  document.querySelector('.side-login-container').classList.remove('visible');
+}
+
+document.querySelector('.side-header').onclick = () => {
+  popupLogIn();
+};
+
+document.getElementById('loginCancel').onclick = () => {
+  cancelLogIn();
+}
+
 // related to displaying task card
 function displayTaskCard() {
   document.querySelector('.task-card').classList.add('visible');
-  document.querySelector('.overlay').classList.add('active');
+  document.getElementById('overlay').classList.add('active');
 }
 function cancelTaskCard() {
   clearInput();
   document.querySelector('.task-card').classList.remove('visible');
-  document.querySelector('.overlay').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
 }
 
 // 整個to-do-header被點到都可以打開task-card哦！

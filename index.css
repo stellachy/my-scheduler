@@ -68,6 +68,10 @@ main {
   box-shadow: 0 5px 10px -5px var(--text-color);
   box-sizing: border-box;
 }
+.side-header:hover {
+  color: var(--text-light);
+  cursor: pointer;
+}
 
 .side-item {
   padding: 6px;
@@ -77,6 +81,133 @@ main {
 .side-user-icon {
   font-size: 25px;
   margin-right: 6px;
+}
+
+.side-user-icon.member {
+  display: none;
+}
+
+.side-header+.overlay {
+  background-color: rgba(179, 179, 179, 0.5);
+  backdrop-filter: blur(5px);
+}
+
+.side-login-container {
+  opacity: 0;
+  transform: translateZ(-10);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+
+  z-index: 101;
+  position: absolute;
+  top: 30%;
+  left: 70%;
+  /* transform: translateX(-50%); */
+
+  background-color: var(--white);
+  width: 350px;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 14px;
+
+  text-align: center;
+}
+.side-login-container.visible {
+  opacity: 1;
+  transform: translateZ(0);
+  pointer-events: auto;
+}
+
+.login-header {
+  font-size: 18px;
+  box-shadow: 0 5px 8px -8px var(--text-color);
+  margin-bottom: 10px;
+}
+
+.side-login-container input {
+  font-size: 14px;
+  font-family: "Inknut Antiqua", serif;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 5px 8px -8px var(--text-light);
+  width: 65%;
+
+  box-sizing: border-box;
+  padding-left: 14px;
+  margin-top: 10px;
+
+  transition: box-shadow 0.3s ease;
+}
+.side-login-container input:focus {
+  outline-color: transparent;
+  outline-style: solid;
+  box-shadow: 0px 0px 6px var(--text-light);
+}
+
+.login-forget {
+  width: 100%;
+  box-sizing: border-box;
+  
+  padding: 0px 100px;
+  padding-right: 0px;
+  
+  font-size: 12px;
+  color: var(--text-light);
+}
+.login-forget:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.side-login-container button {
+  margin-top: 10px;
+  width: 65%;
+  border-radius: 20px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.side-login-container button:hover {
+  background-color: var(--tag-red);
+  cursor: pointer;
+  transform: scale(1.02) 
+}
+.side-login-container button:focus {
+  box-shadow: 0 0 2px var(--text-light);
+  background-color: var(--tag-red);
+}
+.side-login-container button:active {
+  transform: scale(0.98);
+}
+
+.login-signup{
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+
+  /* background-color: #504A4A; */
+  font-size: 12px;
+  color: var(--text-light);
+  display: flex;
+  justify-content: center;
+}
+.login-signup span {
+  margin-left: 6px;
+  color: var(--tag-red);
+}
+.login-signup span:hover {
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.login-cancel {
+  color: var(--text-color);
+}
+.login-cancel:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+
+  cursor: pointer;
+  color: var(--text-light);
 }
 
 header,
@@ -345,7 +476,7 @@ button {
   backdrop-filter: blur(5px);
 
   z-index: 100;
-  /* display: none; */
+
   opacity: 0;
   transform: translateZ(-10);
   transition: opacity 0.3s ease, transform 0.3s ease;
@@ -395,9 +526,6 @@ button {
   border-radius: 10px;
   padding: 5px 10px;
   font-size: 14px;
-}
-.task-popup.visible {
-
 }
 
 .task-popup input {
@@ -616,6 +744,8 @@ button {
   margin: auto;
   color: var(--text-light);
   border-bottom: 1px solid var(--text-light);
+
+  cursor: grab;
 }
 
 .task.red {
