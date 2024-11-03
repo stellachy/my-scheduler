@@ -34,6 +34,9 @@ body {
 .done-content {
   min-height: 350px;
 }
+.year-view .done-content {
+  min-height: fit-content;
+}
 
 /* 調整header的fixed on the top */
 header {

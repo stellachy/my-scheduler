@@ -986,6 +986,14 @@ function popupTask() {
           // filter gets the tasks array w/out the specific id!
           tasks = tasks.filter(task => task.id !== id);
 
+          // let matchingIndex;
+          // tasks.forEach((task, index) => {
+          //   if (task.id === id) {
+          //     matchingIndex = index;
+          //   }
+          // })
+          // tasks.splice(matchingIndex, 1)
+
           saveToStorage();
           renderTask(viewSelected);
         }
