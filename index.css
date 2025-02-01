@@ -97,14 +97,15 @@ main {
 
 .side-login-container {
   opacity: 0;
-  transform: translateZ(-10);
+  /* transform: translateZ(-10); */
+  transform: translate(-50%, -50%) scale(0.9);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 
   z-index: 101;
-  position: absolute;
-  top: 30%;
-  left: 70%;
+  position: fixed;
+  top: 25%;
+  left: 35%;
   /* transform: translateX(-50%); */
 
   background-color: var(--white);

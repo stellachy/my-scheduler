@@ -1,0 +1,5 @@
+.vscode
+.DS_Store
+
+# 也可忽略自己，但通常不會這麼做
+# .gitignore

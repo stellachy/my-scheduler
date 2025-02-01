@@ -25,15 +25,17 @@
     <div class="overlay" id="logInOverlay">
     </div>
     <div class="side-login-container">
-      <div class="login-header">Login</div>
-      <div>
-        <input type="text" placeholder="Email">
-      </div>
-      <div>
-        <input type="password" placeholder="Password">        
-      </div>
-      <div class="login-forget">Forget password?</div>
-      <button>Login</button>
+      <form action="checkAccount.php" method="POST">
+        <div class="login-header">Login</div>
+        <div>
+          <input type="text" name="email" placeholder="Email">
+        </div>
+        <div>
+          <input type="password" name="passwd" placeholder="Password">        
+        </div>
+        <div class="login-forget">Forget password?</div>
+        <button type="submit">Login</button>
+      </form>
       <div class="login-signup">Not a member? 
         <span>Sign Up</span>
       </div>
