@@ -166,7 +166,6 @@ function calendarChange() {
   });
 }
 calendarChange();
-calendarChange();
 
 // add date to the done-content in the day-view
 function addDate(today) {
@@ -188,7 +187,7 @@ function addDate(today) {
 addDate(today);
 
 // this generate the week-view
-function generateWeek() {
+function generateWeek(today) {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   let weekViewHTML = '';
   const currentMonday = getMonday(today);
@@ -524,8 +523,8 @@ function saveToStorage() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-
 // get color after tags being clicked
+let color = 'red';
 document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 document.querySelectorAll('.tag').forEach((tag) => {
   tag.onclick = () => {
@@ -630,71 +629,6 @@ function renderTask(viewSelected) {
         if (isSameDate(taskDate, weekDate)) {
           if (task.status) {
             document.querySelectorAll('.week-view .done-content')[index]
-              .innerHTML += `<span class="task ${task.color} ${task.status}">${task.title}</span>`;
-          } else {
-            document.getElementById('toDoContent')
-              .innerHTML += `<span  
-                class="task ${task.color}"
-                data-id="${task.id}"
-                >${task.title}</span>
-                <div class="task-popup"></div>
-              `;
-          }
-        }
-      })
-    });
-  } else if (viewSelected === 'month-view') {
-    const monthDates = [];
-    document.querySelectorAll('.month-view .done-content').forEach((done) => {
-      const { date } = done.dataset
-      monthDates.push(new Date(date))
-    }); // get an array from .done-content's data-attribute
-
-    tasks.forEach((task) => {
-      const taskDate = new Date(task.date);
-
-      monthDates.forEach((monthDate, index) => {
-        if (isSameDate(taskDate, monthDate)) {
-          if (task.status) {
-            document.querySelectorAll('.month-view .done-content')[index]
-              .innerHTML += `<span 
-                class="task ${task.color} ${task.status}"
-                data-id="${task.id}"
-                >${task.title}</span>
-                <div class="task-popup"></div>
-              `;
-          } else {
-            document.getElementById('toDoContent')
-              .innerHTML += `<span 
-                class="task ${task.color}"
-                data-id="${task.id}"
-                >${task.title}</span>
-                <div class="task-popup"></div>
-              `;
-          }
-        }
-      })
-    });
-  } else if (viewSelected === 'year-view') {
-    const yearDates = [];
-    document.querySelectorAll('.year-view .done-content').forEach((done) => {
-      const { date } = done.dataset;
-      yearDates.push(new Date(date));
-    }); // get an array from .done-content's data-attribute
-
-    tasks.forEach((task) => {
-      const taskDate = new Date(task.date);
-
-      yearDates.forEach((yearDate, index) => {
-        if (isSameDate(taskDate, yearDate)) {
-          if (task.status) {
-            document.querySelectorAll('.year-view .done-content')[index]
-              .innerHTML += `<span 
-                class="task ${task.color} ${task.status}"
-                data-id="${task.id}"
-                >${task.title}</span>
-                <div class="task-popup"></div>
-              `;
               .innerHTML += `<span 
                 class="task ${task.color} ${task.status}"
                 data-id="${task.id}"
@@ -788,7 +722,7 @@ function renderTask(viewSelected) {
   popupTask();
 }
 
-function getFormattedDate(today) {
+function displayHeader(today) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const monthsFull = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -820,8 +754,6 @@ function getFormattedDate(today) {
   }
 }
 
-console.log(tasks);
-
 function getMonday(today) {
   const theDay = new Date(today);
   const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
@@ -830,15 +762,301 @@ function getMonday(today) {
   theDay.setHours(-24 * (day - 1));
   // }
 
-  return new Date(today.toDateString());
+  return new Date(theDay.toDateString());
 }
 
 function getSunday(today) {
-  today = new Date(today)
-  const day = today.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
+  const theDay = new Date(today);
 
-  today.setHours(24 * (7 - day));
+  const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
 
-  return new Date(today.toDateString());
+  theDay.setHours(24 * (7 - day));
+
+  return new Date(theDay.toDateString());
 }
+
+function dragTask() {
+  document.querySelectorAll('span.task').forEach(taskBox => {
+    taskBox.setAttribute('draggable', 'true');
+    taskBox.ondragstart = (event) => {
+      event.dataTransfer.setData('text/plain', taskBox.dataset.id);
+
+      // Create a custom image for the drag
+      const dragImage = document.createElement('div');
+      dragImage.style.width = '100px';
+      dragImage.style.height = '50px';
+      dragImage.style.background = 'transparent';
+      document.body.appendChild(dragImage);
+
+      event.dataTransfer.setDragImage(dragImage, 0, 0);
+    };
+  });
+
+  document.querySelectorAll(`.${viewSelected} .done-content`).forEach(container => {
+    container.ondragover = (event) => event.preventDefault(); // Allow dropping
+    container.ondrop = (event) => {
+      event.preventDefault();
+      let taskId = event.dataTransfer.getData('text/plain');
+      // let taskElement = document.querySelector(`[data-id="${taskId}"]`);
+
+      // make sure the new date conform to the <input> element!
+      const containerDate = new Date(container.dataset.date);
+      const year = containerDate.getFullYear();
+      const month = ('0' + (containerDate.getMonth() + 1)).slice(-2);
+      const date = ('0' + containerDate.getDate()).slice(-2);
+      const dateString = `${year}-${month}-${date}`;
+
+      // Update task's properties (status, date, etc.) depending on the container
+      updateTask(taskId, container.dataset.status, dateString);
+    };
+  });
+
+  const toDoContainer = document.getElementById('toDoContent');
+  toDoContainer.ondragover = (event) => event.preventDefault();
+  toDoContainer.ondrop = (event) => {
+    event.preventDefault();
+    const taskId = event.dataTransfer.getData('text/plain');
+
+    updateTask(taskId, toDoContainer.dataset.status, 0)
+  }
+
+  function updateTask(taskId, newStatus, newDate) {
+    let task = tasks.find(task => task.id === taskId);
+    task.status = newStatus;
+    task.date = newDate ? newDate : task.date;
+
+    saveToStorage();
+    renderTask(viewSelected);
+  }
+}
+
+function adjustTaskHeight() {
+  document.querySelectorAll('.done-content span.task').forEach(taskBox => {
+    const baseHeight = 35;
+    const id = taskBox.dataset.id;
+    const matchingTask = tasks.find(task => task.id === id)
+    const hours = matchingTask.hour;
+
+    taskBox.style.height = `${baseHeight * hours}px`
+  })
+}
+
+function popupTask() {
+  document.querySelectorAll('span.task').forEach(taskBox => {
+    const taskPopup = taskBox.nextElementSibling;
+    let isEditing = false;
+
+    // hover to see details
+    taskBox.onmouseenter = () => {
+      if (isEditing) {
+        return;
+      }
+      const { id } = taskBox.dataset;
+      let matchingTask = tasks.find(task => task.id === id);
+      // let matchingTask;
+
+      // tasks.forEach(task => {
+      //   if (task.id === id) {
+      //     matchingTask = task;
+      //   }
+      // });
+
+      taskPopup.style.left = '0px';  // 讓popup呈現
+      taskPopup.innerHTML = `
+        <div class="task-card-grid">
+          <label class="title">Title</label>
+          <span class="details">
+            <span class="text">${matchingTask.title}</span>
+            <input value="${matchingTask.title}">
+          </span>
+
+          <label>Date</label>
+          <span class="details">
+            <span class="text">${matchingTask.date}</span>
+            <input type="date" value="${matchingTask.date}">
+          </span>
+
+          <label>Time</label>
+          <span class="details">
+            <span class="text">${matchingTask.time}</span>
+            <input type="time" value="${matchingTask.time}">
+          </span>
+          
+          <label>Hour</label>
+          <span class="details">
+            <span class="text">${matchingTask.hour}</span>
+            <input type="number" value="${matchingTask.hour}">
+          </span>
+
+          <label class="more">More</label>
+          <span class="details">
+            <span class="text">${matchingTask.more}</span>
+            <input value="${matchingTask.more}">
+          </span>
+        </div>
+
+        <div class="task-popup-config">
+          <span class="material-symbols-outlined delete-task">close</span>
+          <span class="material-symbols-outlined to-do">radio_button_unchecked</span>
+          <span class="material-symbols-outlined done">check_circle</span>
+          <span class="material-symbols-outlined save-task">task</span>
+        </div>
+      `
+      if (matchingTask.status === 'done') {
+        taskPopup.querySelector('.to-do').style.display = 'none';
+      } else {
+        taskPopup.querySelector('.done').style.display = 'none';
+      }
+    }
+
+    // click to edit
+    taskBox.onclick = () => {
+      isEditing = true;
+
+      // display the input & show the edited value on screen
+      taskPopup.querySelectorAll('.details').forEach(detail => {
+        // changing the color to indicate users that they are allowed to edit the task popup now!
+        detail.style.color = 'var(--text-light)';
+
+        detail.onclick = () => {
+          const textElement = detail.querySelector('.text');
+          const inputField = detail.querySelector('input');
+
+          // Toggle visibility of text and input
+          textElement.style.display = 'none';
+          inputField.style.display = 'block';
+
+          // Automatically focus the input field
+          inputField.focus();
+
+          // handle when the user presses Enter to save the changes
+          inputField.onblur = () => {
+            textElement.textContent = inputField.value;
+            textElement.style.display = 'block';
+            inputField.style.display = 'none';
+
+            // isEditing = false;
+          };
+        }
+      })
+
+      // check if the "status" symbol is clicked, & show the change
+      const doneIcon = taskPopup.querySelector('.done');
+      const toDoIcon = taskPopup.querySelector('.to-do');
+      doneIcon.onclick = () => {
+        doneIcon.style.display = 'none';
+        toDoIcon.style.display = 'block';
+      };
+      toDoIcon.onclick = () => {
+        toDoIcon.style.display = 'none';
+        doneIcon.style.display = 'block';
+      }
+
+      // save new values to tasks array when the save icon is clicked
+      taskPopup.querySelector('.save-task').onclick = () => {
+        const { id } = taskBox.dataset;
+        let matchingTask = tasks.find(task => task.id === id);
+
+        const inputs = taskPopup.querySelectorAll('input');
+        const title = inputs[0].value;
+        const date = inputs[1].value;
+        const time = inputs[2].value;
+        const hour = inputs[3].value;
+        const more = inputs[4].value;
+
+        // check which status
+        const isDone = doneIcon.style.display !== 'none';
+
+        matchingTask.status = isDone ? 'done' : '';
+
+        matchingTask.title = title;
+        matchingTask.date = date;
+        matchingTask.time = time;
+        matchingTask.hour = hour;
+        matchingTask.more = more;
+
+        saveToStorage();
+        renderTask(viewSelected);
+      }
+
+      // click close icon to delete tasks
+      taskPopup.querySelector('.delete-task').onclick = () => {
+        if (confirm('Sure to delete?')) {
+          const { id } = taskBox.dataset;
+          // filter gets the tasks array w/out the specific id!
+          tasks = tasks.filter(task => task.id !== id);
+
+          // let matchingIndex;
+          // tasks.forEach((task, index) => {
+          //   if (task.id === id) {
+          //     matchingIndex = index;
+          //   }
+          // })
+          // tasks.splice(matchingIndex, 1)
+
+          saveToStorage();
+          renderTask(viewSelected);
+        }
+      }
+
+      // click outside to close the popup WITHOUT changing the tasks array
+      document.addEventListener('click', (event) => {
+        //!!remember to use theField.contains(event.target)~
+        if (!taskPopup.contains(event.target) &&
+          !taskBox.contains(event.target)) {
+          isEditing = false;
+          taskPopup.style.left = '-300px';
+        }
+      });
+    }
+
+    taskBox.onmouseleave = () => {
+      if (!isEditing) {
+        taskPopup.style.left = '-300px';
+      }
+    };
+  });
+}
+
+// make changing view possible by showing / hiding different section!
+let viewSelected = 'day-view';
+function handleViewChange(today) {
+  document.getElementById('view-selector').addEventListener('change', (event) => {
+    viewSelected = event.target.value;
+
+    document.querySelectorAll('.done-section').forEach((section) => {
+      section.classList.remove('active');
+    });
+
+    document.querySelector(`.${viewSelected}`)
+      .classList.add('active');
+
+    changeDate(today);
+    renderCalendar(currentMonth, currentYear);
+    calendarChange();  // making the btn for each date interactive
+
+    displayHeader(today);
+
+    // after changing the view, the date goes back to today.
+    displayToday = new Date();
+
+    // this helps change the size of "to-do-section" depending on the view (here is for the month-&year- view!)
+    if (viewSelected === 'month-view' || viewSelected === 'year-view') {
+      document.querySelector('.to-do-section').
+        classList.add('smaller-size');
+    } else {
+      document.querySelector('.to-do-section').
+        classList.remove('smaller-size');
+    }
+  });
+}
+handleViewChange(today);
+
+// display tasks when the page first loads.
+renderTask(viewSelected);
+
+displayHeader(today);
+
+// the following is for testing.
+console.log(tasks);
 // localStorage.clear();
