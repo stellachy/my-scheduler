@@ -90,9 +90,45 @@
       </span>
       <span id="dateChanger" class="header-view-detail">
         <span class="header-view-day"></span>
+      <span id="dateChanger" class="header-view-detail">
+        <span class="header-view-day"></span>
         <span class="header-view-date"></span>
       </span>
 
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <span id="monthYear"></span>
+          <div>
+            <button id="prevMonth" class="nav-btn">◀</button>
+            <button id="nextMonth" class="nav-btn">▶</button>
+          </div>
+        </div>
+
+        <table class="calendar">
+          <thead>
+            <tr>
+              <th>M</th>
+              <th>T</th>
+              <th>W</th>
+              <th>T</th>
+              <th>F</th>
+              <th>S</th>
+              <th>S</th>
+            </tr>
+          </thead>
+          <tbody id="calendarBody"></tbody>
+        </table>
+      </div>
+
+      <div class="btn-container">
+        <button id="todayBtn" class="header-today">today</button>
+        <button id="prevBtn" class="header-prev">
+          <span class="material-symbols-outlined">chevron_backward</span>
+        </button>
+        <button id="nextBtn" class="header-next">
+          <span class="material-symbols-outlined">chevron_forward</span>
+        </button>
+      </div>
       <div class="calendar-container">
         <div class="calendar-header">
           <span id="monthYear"></span>
@@ -136,6 +172,7 @@
 
       <div class="to-do-header" id="displayText">
         <div class="to-do-header-text">To dos</div>
+        <span class="material-symbols-outlined to-do-header-icon" id="displayIcon">add_circle</span>
         <span class="material-symbols-outlined to-do-header-icon" id="displayIcon">add_circle</span>
       </div>
 

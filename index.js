@@ -166,6 +166,7 @@ function calendarChange() {
   });
 }
 calendarChange();
+calendarChange();
 
 // add date to the done-content in the day-view
 function addDate(today) {
@@ -188,8 +189,11 @@ addDate(today);
 
 // this generate the week-view
 function generateWeek(today) {
+function generateWeek(today) {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
   let weekViewHTML = '';
+  const currentMonday = getMonday(today);
+  const weekDates = getWeekDates(currentMonday).map((date) => {
   const currentMonday = getMonday(today);
   const weekDates = getWeekDates(currentMonday).map((date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
@@ -211,12 +215,16 @@ function generateWeek(today) {
     .innerHTML = weekViewHTML;
 }
 generateWeek(today);
+generateWeek(today);
 
+function getWeekDates(currentMonday) {
 function getWeekDates(currentMonday) {
   const weekDates = [];
 
   // loop through the week & create the date data for Mon to Sun
   for (i = 0; i < 7; i++) {
+    const day = new Date(currentMonday);
+    day.setDate(currentMonday.getDate() + i);
     const day = new Date(currentMonday);
     day.setDate(currentMonday.getDate() + i);
     weekDates.push(day);
@@ -227,7 +235,13 @@ function getWeekDates(currentMonday) {
 
 // this generate the month-grid!
 function generateMonth(today, daysInMonth, firstDayOfMonth) {
+function generateMonth(today, daysInMonth, firstDayOfMonth) {
   const month = document.getElementById('month');
+
+  const monthDates = getMonthDates(today, daysInMonth).map((date) => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+  })
+
 
   const monthDates = getMonthDates(today, daysInMonth).map((date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
@@ -262,6 +276,7 @@ function generateMonth(today, daysInMonth, firstDayOfMonth) {
             <div class="month-view-day">
               <div class="month-view-day-header">${day}</div>
               <div class="done-content" data-date="${monthDates[day - 1]}">
+              <div class="done-content" data-date="${monthDates[day - 1]}">
               </div>
             </div>
           `;
@@ -274,7 +289,23 @@ function generateMonth(today, daysInMonth, firstDayOfMonth) {
   }
 }
 generateMonth(today, getDaysInMonth(today), getFirstDayOfMonth(today));
+generateMonth(today, getDaysInMonth(today), getFirstDayOfMonth(today));
 
+function getMonthDates(today, daysInMonth) {
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+  const monthDates = [];
+
+  // loop through the week & create the date data for Mon to Sun
+  for (i = 0; i < daysInMonth; i++) {
+    const day = new Date(firstDayOfMonth);
+    day.setDate(firstDayOfMonth.getDate() + i);
+    monthDates.push(day);
+  }
+
+  return monthDates;
+}
+
+function getFirstDayOfMonth(today) {
 function getMonthDates(today, daysInMonth) {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
   const monthDates = [];
@@ -294,6 +325,7 @@ function getFirstDayOfMonth(today) {
   return firstDayOfMonth;
 }
 
+function getDaysInMonth(today) {
 function getDaysInMonth(today) {
   const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   return daysInMonth;
@@ -320,13 +352,35 @@ function generateYear(today) {
       })
     yearDates.push(monthDates);
   });
+function generateYear(today) {
+  const months = [];
+
+  const monthsFull = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  for (i = 1; i < 13; i++) {
+    const daysOfMonth = new Date(today.getFullYear(), i, 0).getDate();
+    months.push({
+      name: monthsFull[i - 1],
+      days: daysOfMonth
+    });
+  }
+
+  const yearDates = [];
+  getYearDates(today).forEach((month) => {
+    const monthDates =
+      month.monthDates.map((date) => {
+        return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+      })
+    yearDates.push(monthDates);
+  });
 
   let yearViewHTML = '';
   let eachDay = '';
 
   function generateEachDay(index, daysInMonth) {
+  function generateEachDay(index, daysInMonth) {
     for (day = 1; day <= daysInMonth; day++) {
       eachDay += `
+              <li class="done-content" data-date="${yearDates[index][day - 1]}">
               <li class="done-content" data-date="${yearDates[index][day - 1]}">
               </li>
             `;
@@ -336,9 +390,12 @@ function generateYear(today) {
 
   months.forEach((month, index) => {
     eachDay = generateEachDay(index, month.days);
+  months.forEach((month, index) => {
+    eachDay = generateEachDay(index, month.days);
     yearViewHTML += `
             <div class="done-grid-item">
               <div class="done-header">${month.name}</div>
+              <div>
               <div>
                 <ol>
                   ${eachDay}
@@ -352,6 +409,26 @@ function generateYear(today) {
 
   document.getElementById('year-view-grid')
     .innerHTML = yearViewHTML;
+}
+generateYear(today);
+
+function getYearDates(today) {
+  const yearDates = [];
+  for (i = 0; i < 12; i++) {
+    const daysOfMonths = new Date(today.getFullYear(), i + 1, 0).getDate()
+    const firstDayOfMonth = new Date(today.getFullYear(), i, 1)
+    const monthDates = []
+    for (j = 0; j < daysOfMonths; j++) {
+      const day = new Date(firstDayOfMonth)
+      day.setDate(firstDayOfMonth.getDate() + j)
+      monthDates.push(day)
+    }
+
+    yearDates.push(
+      { monthDates }
+    );
+  }
+  return yearDates;
 }
 generateYear(today);
 
@@ -453,6 +530,11 @@ overlay.onclick = () => {
   document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
   color = 'red';
   document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
+
+  // reset color to red if the task-card is clicked off
+  document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
+  color = 'red';
+  document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 }
 document.getElementById('cancelBtn');
 cancelBtn.onclick = () => {
@@ -462,9 +544,15 @@ cancelBtn.onclick = () => {
   document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
   color = 'red';
   document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
+
+  // reset color to red if the task-card is clicked off
+  document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
+  color = 'red';
+  document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 }
 
 // get the user's input
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 function getInput(status, color) {
@@ -474,6 +562,7 @@ function getInput(status, color) {
   let time = document.getElementById('task-card-time').value;
   let hour = document.getElementById('task-card-hour').value;
   let more = document.getElementById('task-card-more').value;
+  const id = generateUniqueId();
   const id = generateUniqueId();
 
   if (title && date) {
@@ -517,6 +606,8 @@ function generateUniqueId() {
 function clearInput() {
   document.getElementById('taskCard');
   taskCard.reset();
+  document.getElementById('taskCard');
+  taskCard.reset();
 }
 
 function saveToStorage() {
@@ -526,10 +617,14 @@ function saveToStorage() {
 // get color after tags being clicked
 let color = 'red';
 document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
+let color = 'red';
+document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 document.querySelectorAll('.tag').forEach((tag) => {
   tag.onclick = () => {
     document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
+    document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
     color = tag.dataset.color;
+    tag.style.boxShadow = '0 0 0 2px var(--text-light)';
     tag.style.boxShadow = '0 0 0 2px var(--text-light)';
   }
 });
@@ -540,10 +635,17 @@ doneBtn.onclick = () => {
 
   if (getInput(status, color)) {
     saveToStorage();
+  if (getInput(status, color)) {
+    saveToStorage();
 
     // display在畫面上
     renderTask(viewSelected);
+    // display在畫面上
+    renderTask(viewSelected);
 
+    // 儲存在tasks之後，把畫面上的value刪掉！
+    clearInput();
+  }
     // 儲存在tasks之後，把畫面上的value刪掉！
     clearInput();
   }
@@ -552,6 +654,12 @@ doneBtn.onclick = () => {
 document.getElementById('addBtn');
 addBtn.onclick = () => {
   const status = '';
+  if (getInput(status, color)) {
+    saveToStorage();
+    renderTask(viewSelected);
+    clearInput();
+  }
+}
   if (getInput(status, color)) {
     saveToStorage();
     renderTask(viewSelected);
@@ -615,6 +723,7 @@ function renderTask(viewSelected) {
         }
       }
     });
+  } else if (viewSelected === 'week-view') {
   } else if (viewSelected === 'week-view') {
     const weekDates = [];
     document.querySelectorAll('.week-view .done-content').forEach((done) => {
@@ -699,7 +808,84 @@ function renderTask(viewSelected) {
                 >${task.title}</span>
                 <div class="task-popup"></div>
               `;
+              .innerHTML += `<span 
+                class="task ${task.color} ${task.status}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
           } else {
+            document.getElementById('toDoContent')
+              .innerHTML += `<span  
+                class="task ${task.color}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
+          }
+        }
+      })
+    });
+  } else if (viewSelected === 'month-view') {
+    const monthDates = [];
+    document.querySelectorAll('.month-view .done-content').forEach((done) => {
+      const { date } = done.dataset
+      monthDates.push(new Date(date))
+    }); // get an array from .done-content's data-attribute
+
+    tasks.forEach((task) => {
+      const taskDate = new Date(task.date);
+
+      monthDates.forEach((monthDate, index) => {
+        if (isSameDate(taskDate, monthDate)) {
+          if (task.status) {
+            document.querySelectorAll('.month-view .done-content')[index]
+              .innerHTML += `<span 
+                class="task ${task.color} ${task.status}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
+          } else {
+            document.getElementById('toDoContent')
+              .innerHTML += `<span 
+                class="task ${task.color}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
+          }
+        }
+      })
+    });
+  } else if (viewSelected === 'year-view') {
+    const yearDates = [];
+    document.querySelectorAll('.year-view .done-content').forEach((done) => {
+      const { date } = done.dataset;
+      yearDates.push(new Date(date));
+    }); // get an array from .done-content's data-attribute
+
+    tasks.forEach((task) => {
+      const taskDate = new Date(task.date);
+
+      yearDates.forEach((yearDate, index) => {
+        if (isSameDate(taskDate, yearDate)) {
+          if (task.status) {
+            document.querySelectorAll('.year-view .done-content')[index]
+              .innerHTML += `<span 
+                class="task ${task.color} ${task.status}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
+          } else {
+            document.getElementById('toDoContent')
+              .innerHTML += `<span 
+                class="task ${task.color}"
+                data-id="${task.id}"
+                >${task.title}</span>
+                <div class="task-popup"></div>
+              `;
             document.getElementById('toDoContent')
               .innerHTML += `<span 
                 class="task ${task.color}"
@@ -732,7 +918,11 @@ function displayHeader(today) {
   const day = today.getDate();
   const year = today.getFullYear();
   const currentMonday = getMonday(today).getDate();
+  const currentMonday = getMonday(today).getDate();
   const currentSunday = getSunday(today).getDate();
+  // this helps display the month name of the next-month (when there are two different months)
+  const prevMonth = months[getMonday(today).getMonth()];
+  const nextMonth = getMonday(today).getMonth() == getSunday(today).getMonth() ? '' : months[getSunday(today).getMonth()];
   // this helps display the month name of the next-month (when there are two different months)
   const prevMonth = months[getMonday(today).getMonth()];
   const nextMonth = getMonday(today).getMonth() == getSunday(today).getMonth() ? '' : months[getSunday(today).getMonth()];
@@ -741,8 +931,10 @@ function displayHeader(today) {
   // display different titles depending on views~
   if (viewSelected === 'day-view') {
     document.querySelector('.header-view-day').innerText = `${dayName}  |`;
+    document.querySelector('.header-view-day').innerText = `${dayName}  |`;
     document.querySelector('.header-view-date').innerText = `${monthName} ${day}, ${year}`;
   } else if (viewSelected === 'week-view') {
+    document.querySelector('.header-view-day').innerText = `${prevMonth} ${currentMonday} - ${nextMonth} ${currentSunday}, ${year}`;
     document.querySelector('.header-view-day').innerText = `${prevMonth} ${currentMonday} - ${nextMonth} ${currentSunday}, ${year}`;
     document.querySelector('.header-view-date').innerText = '';
   } else if (viewSelected === 'month-view') {
@@ -757,11 +949,15 @@ function displayHeader(today) {
 function getMonday(today) {
   const theDay = new Date(today);
   const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
+  const theDay = new Date(today);
+  const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
   // if (day !== 1) { // check if it's monday
 
   theDay.setHours(-24 * (day - 1));
+  theDay.setHours(-24 * (day - 1));
   // }
 
+  return new Date(theDay.toDateString());
   return new Date(theDay.toDateString());
 }
 
@@ -769,7 +965,11 @@ function getSunday(today) {
   const theDay = new Date(today);
 
   const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
+  const theDay = new Date(today);
 
+  const day = theDay.getDay() || 7; // 會得到0-6，如果是0=>就把它變成預設值7
+
+  theDay.setHours(24 * (7 - day));
   theDay.setHours(24 * (7 - day));
 
   return new Date(theDay.toDateString());
