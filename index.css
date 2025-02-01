@@ -339,8 +339,6 @@ main {
 select {
   font-family: "Inknut Antiqua", serif;
   border: none;
-
-
   border-radius: 20px;
   background-color: var(--button-color);
   padding: 2px 10px;
@@ -384,8 +382,6 @@ button {
   background-color: var(--button-color);
   padding: 0px 10px;
   box-sizing: border-box;
-
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -449,21 +445,8 @@ button {
 .header-next:active {
   background-color: var(--section-color);
   transform: scale(0.98);
-  transform: scale(1.02);
-  
+
   transition: background-color 0.3s ease, box-shadow 0.3 ease;
-}
-
-.header-prev:focus, 
-.header-next:focus {
-  background-color: var(--section-color);
-  box-shadow: 0 0 0 1px var(--text-light);
-}
-
-.header-prev:active,
-.header-next:active {
-  background-color: var(--section-color);
-  transform: scale(0.98);
 }
 
 .to-do-section {
@@ -669,13 +652,6 @@ button {
   color: var(--text-dark);
   font-family: "Inknut Antiqua", serif;;
   font-size: 16px;
-}
-
-.task-card textarea:focus,
-.task-card input:focus {
-  outline-color: transparent;
-  outline-style: solid;
-  box-shadow: 0 0 0 2px var(--text-light);
 }
 
 .task-card textarea:focus,
@@ -910,18 +886,6 @@ button {
   vertical-align: top;
 
   overflow: auto;
-}
-
-.month-view-day-header {
-  margin-top: 6px;
-  height: 25px;
-  width: 20px;
-  vertical-align: top; 
- 
-  line-height: 1.25;
-  border-radius: 50%;
-  padding-left: 5px;
-  vertical-align: center;
 }
 
 .month-view-day-header {
