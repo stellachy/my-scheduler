@@ -46,7 +46,7 @@ nextBtn.onclick = () => {
 
 // move the mouse inside the box to make the lil calendar appear
 document.getElementById('dateChanger');
-const calendarContainer = document.querySelector('.calendar-container');
+const calendarContainer = document.getElementById('calendarContainer');
 dateChanger.onmousemove = () => {
   calendarContainer.classList.add('visible');
 }
@@ -167,6 +167,7 @@ function calendarChange() {
 }
 calendarChange();
 
+// ------------- Related to Grid (day/week/month/year with dates) -------------
 // add date to the done-content in the day-view
 function addDate(today) {
   // setting different time for each block
@@ -229,6 +230,7 @@ function getWeekDates(currentMonday) {
 function generateMonth(today, daysInMonth, firstDayOfMonth) {
   const month = document.getElementById('month');
 
+  // 將拿到的日期做格式轉換
   const monthDates = getMonthDates(today, daysInMonth).map((date) => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   })
@@ -275,6 +277,7 @@ function generateMonth(today, daysInMonth, firstDayOfMonth) {
 }
 generateMonth(today, getDaysInMonth(today), getFirstDayOfMonth(today));
 
+// 拿到today當月每一天的日期
 function getMonthDates(today, daysInMonth) {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
   const monthDates = [];
@@ -289,11 +292,13 @@ function getMonthDates(today, daysInMonth) {
   return monthDates;
 }
 
+// 拿到當月的第一天的星期
 function getFirstDayOfMonth(today) {
   const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).getDay();
   return firstDayOfMonth;
 }
 
+// 拿到當月有幾天
 function getDaysInMonth(today) {
   const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   return daysInMonth;
@@ -424,18 +429,25 @@ document.getElementById('loginCancel').onclick = () => {
   cancelLogIn();
 }
 
-// related to displaying task card
+// ------------- Related to Task Card (add task, sort task, etc.)-------------
 function displayTaskCard() {
   document.querySelector('.task-card').classList.add('visible');
   document.getElementById('overlay').classList.add('active');
 }
 function cancelTaskCard() {
   clearInput();
+  
+  // 讓它隱藏
   document.querySelector('.task-card').classList.remove('visible');
   document.getElementById('overlay').classList.remove('active');
+
+  // reset color to red if the task-card is clicked off
+  document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
+  color = 'red';
+  document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 }
 
-// 整個to-do-header被點到都可以打開task-card哦！
+// 打開task card的時機
 document.getElementById('displayText');
 displayText.onclick = () => {
   displayTaskCard();
@@ -445,26 +457,18 @@ displayIcon.onclick = () => {
   displayTaskCard();
 };
 
+// 關掉task card的時機
 document.getElementById('overlay');
 overlay.onclick = () => {
   cancelTaskCard();
-
-  // reset color to red if the task-card is clicked off
-  document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
-  color = 'red';
-  document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 }
 document.getElementById('cancelBtn');
 cancelBtn.onclick = () => {
   cancelTaskCard();
-
-  // reset color to red if the task-card is clicked off
-  document.querySelectorAll('.tag').forEach(tag => tag.style.boxShadow = 'none');
-  color = 'red';
-  document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 }
 
-// get the user's input
+// 取得使用者在Task Card裡輸入的內容 get the user's input
+// here之後可串接api寫入DB！
 let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
 
 function getInput(status, color) {
@@ -510,10 +514,12 @@ function sortTasks() {
   })
 }
 
+// 取得隨機編號 => 讓每個task有自己的unique id
 function generateUniqueId() {
   return crypto.randomUUID();
 }
 
+// 清除Task Card裡面的input
 function clearInput() {
   document.getElementById('taskCard');
   taskCard.reset();
@@ -523,7 +529,7 @@ function saveToStorage() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// get color after tags being clicked
+// Task Card中標籤的顏色 (更改data 及 外觀) get color after tags being clicked
 let color = 'red';
 document.querySelector('.tag-red').style.boxShadow = '0 0 0 2px var(--text-light)';
 document.querySelectorAll('.tag').forEach((tag) => {
@@ -534,6 +540,7 @@ document.querySelectorAll('.tag').forEach((tag) => {
   }
 });
 
+// 把任save到localStorage的時機(已完成的任務)
 document.getElementById('doneBtn');
 doneBtn.onclick = () => {
   const status = 'done';
@@ -549,6 +556,7 @@ doneBtn.onclick = () => {
   }
 }
 
+// 把任save到localStorage的時機(未完成的任務)
 document.getElementById('addBtn');
 addBtn.onclick = () => {
   const status = '';
@@ -559,6 +567,7 @@ addBtn.onclick = () => {
   }
 }
 
+// 根據不同的viewSelected去render task呈現在畫面上
 function renderTask(viewSelected) {
   function isSameDate(taskDate, contentDate) {
     return taskDate.getFullYear() === contentDate.getFullYear() &&
@@ -722,6 +731,7 @@ function renderTask(viewSelected) {
   popupTask();
 }
 
+// 根據不同日期/grid view去display header
 function displayHeader(today) {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -775,6 +785,7 @@ function getSunday(today) {
   return new Date(theDay.toDateString());
 }
 
+// 拖曳Task Box（可以改變status及date，time目前沒做到）
 function dragTask() {
   document.querySelectorAll('span.task').forEach(taskBox => {
     taskBox.setAttribute('draggable', 'true');
@@ -830,6 +841,7 @@ function dragTask() {
   }
 }
 
+// 根據花了多少時間 => 調整Task Box的高度（在renderTask之中，當是day或week-view時才會使用這個function）
 function adjustTaskHeight() {
   document.querySelectorAll('.done-content span.task').forEach(taskBox => {
     const baseHeight = 35;
@@ -841,6 +853,7 @@ function adjustTaskHeight() {
   })
 }
 
+// 在已經render之後，對Task Box可查看更多info、更改task內容
 function popupTask() {
   document.querySelectorAll('span.task').forEach(taskBox => {
     const taskPopup = taskBox.nextElementSibling;
