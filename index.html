@@ -78,8 +78,9 @@
   <header>
     <div class="header-container">
       <span class="material-symbols-outlined header-menu-icon" id="menuIcon">menu</span>
+
       <span class="header-title">My Scheduler</span>
-      <!-- goes back to the original one! -->
+
       <span class="header-view-changer">
         <select name="change-view" id="view-selector">
           <option value="day-view" selected>Day</option>
@@ -88,46 +89,13 @@
           <option value="year-view">Year</option>
         </select>
       </span>
+
       <span id="dateChanger" class="header-view-detail">
         <span class="header-view-day"></span>
         <span class="header-view-date"></span>
       </span>
 
       <div id="calendarContainer" class="calendar-container">
-        <div class="calendar-header">
-          <span id="monthYear"></span>
-          <div>
-            <button id="prevMonth" class="nav-btn">◀</button>
-            <button id="nextMonth" class="nav-btn">▶</button>
-          </div>
-        </div>
-
-        <table class="calendar">
-          <thead>
-            <tr>
-              <th>M</th>
-              <th>T</th>
-              <th>W</th>
-              <th>T</th>
-              <th>F</th>
-              <th>S</th>
-              <th>S</th>
-            </tr>
-          </thead>
-          <tbody id="calendarBody"></tbody>
-        </table>
-      </div>
-
-      <div class="btn-container">
-        <button id="todayBtn" class="header-today">today</button>
-        <button id="prevBtn" class="header-prev">
-          <span class="material-symbols-outlined">chevron_backward</span>
-        </button>
-        <button id="nextBtn" class="header-next">
-          <span class="material-symbols-outlined">chevron_forward</span>
-        </button>
-      </div>
-      <div class="calendar-container">
         <div class="calendar-header">
           <span id="monthYear"></span>
           <div>
